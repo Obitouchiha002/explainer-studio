@@ -7191,7 +7191,11 @@ let showTip = null;
 (function(){
   const box = $('tipbox');
   let hideT = null;
-  showTip = function show(el){
+  // NOTE: named function expression ka naam sirf uske apne andar dikhta hai.
+  // Isliye handler `showTip` hi bulata hai — pehle yahan `show(el)` tha aur
+  // hover pe chupchaap ReferenceError girta tha (test function ko seedha
+  // bulata tha, isliye pakda nahi gaya).
+  showTip = function(el){
     const raw = el.dataset.tip;
     if(!raw) return;
     clearTimeout(hideT);
@@ -7224,7 +7228,7 @@ let showTip = null;
   function hide(){ hideT = setTimeout(() => box.classList.remove('on'), 60); }
   document.addEventListener('pointerover', e => {
     const el = e.target.closest && e.target.closest('[data-tip]');
-    if(el) show(el); else hide();
+    if(el) showTip(el); else hide();
   });
   document.addEventListener('pointerdown', hide, true);
 })();
