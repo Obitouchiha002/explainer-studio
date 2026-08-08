@@ -327,6 +327,63 @@
   #sText{flex:1;width:100%;border:0;outline:none;resize:none;padding:14px 16px;
     background:transparent;color:var(--ink);font-size:17px;line-height:1.7;font-family:inherit;}
 
+  /* ---------------- CONTEXT TOOLBAR (Canva jaisa) ---------------- */
+  .ctxbar{position:fixed;top:66px;left:50%;transform:translateX(-50%);z-index:38;display:none;
+    align-items:center;gap:4px;padding:7px 9px;border-radius:16px;
+    background:var(--panel-solid);border:1px solid var(--line);
+    box-shadow:0 10px 30px rgba(16,24,40,.16);max-width:calc(100vw - 40px);
+    overflow-x:auto;scrollbar-width:none;}
+  .ctxbar::-webkit-scrollbar{display:none}
+  .ctxbar.on{display:flex;}
+  body.presenting .ctxbar{display:none !important;}
+  .cbtn{height:34px;min-width:34px;padding:0 9px;border-radius:9px;font-size:14px;font-weight:800;
+    color:var(--sub);display:flex;align-items:center;justify-content:center;gap:5px;
+    transition:.12s;white-space:nowrap;flex:0 0 auto;}
+  .cbtn:hover{background:var(--panel2);color:var(--ink);}
+  .cbtn.on{background:var(--blue-soft);color:var(--blue);}
+  .cbtn.txt{font-size:13px;font-weight:700;}
+  .cdiv{width:1px;height:22px;background:var(--line);flex:0 0 1px;margin:0 3px;}
+  /* − 95.7 + wala stepper */
+  .cstep{display:flex;align-items:center;gap:2px;background:var(--panel2);border-radius:9px;
+    padding:2px;flex:0 0 auto;}
+  .cstep button{width:26px;height:28px;border-radius:7px;font-size:15px;font-weight:800;color:var(--sub);}
+  .cstep button:hover{background:var(--bg);color:var(--ink);}
+  .cstep input{width:46px;height:28px;border:0;background:transparent;text-align:center;
+    font-size:13px;font-weight:800;outline:none;color:var(--ink);}
+  .cswatch{width:26px;height:26px;border-radius:8px;border:2px solid var(--line);flex:0 0 26px;}
+
+  /* ---------------- ANIMATE PANEL ---------------- */
+  .animp{position:fixed;right:16px;top:70px;width:300px;z-index:39;display:none;
+    padding:14px;border-radius:20px;background:var(--panel-solid);border:1px solid var(--line);
+    box-shadow:var(--shadow);max-height:calc(100vh - 150px);overflow-y:auto;}
+  .animp.on{display:block;}
+  .atabs{display:flex;gap:4px;background:var(--panel2);border-radius:11px;padding:4px;margin-bottom:14px;}
+  .atab{flex:1;padding:7px;border-radius:8px;font-size:13px;font-weight:800;color:var(--muted);transition:.12s;}
+  .atab.on{background:var(--panel-solid);color:var(--blue);box-shadow:var(--shadow-sm);}
+  .agrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+  .acard{border-radius:12px;border:2px solid var(--line);background:var(--panel2);
+    padding:8px 4px 7px;transition:.13s;overflow:hidden;}
+  .acard:hover{border-color:var(--blue);}
+  .acard.on{border-color:var(--blue);background:var(--blue-soft);}
+  .astage{height:44px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+  .abox{width:20px;height:26px;border-radius:4px;background:var(--blue);}
+  .acard span{display:block;font-size:10.5px;font-weight:800;color:var(--sub);margin-top:5px;}
+  .acard.on span{color:var(--blue);}
+  /* har card apni animation loop me dikhata hai — Canva jaisa */
+  .acard:hover .abox,.acard.on .abox{animation:var(--pv) 1.5s ease-in-out infinite;}
+  @keyframes pvRise{0%{opacity:0;transform:translateY(14px)}40%,100%{opacity:1;transform:none}}
+  @keyframes pvPan{0%{opacity:0;transform:translateX(-16px)}40%,100%{opacity:1;transform:none}}
+  @keyframes pvPanR{0%{opacity:0;transform:translateX(16px)}40%,100%{opacity:1;transform:none}}
+  @keyframes pvDrop{0%{opacity:0;transform:translateY(-14px)}40%,100%{opacity:1;transform:none}}
+  @keyframes pvFade{0%{opacity:0}40%,100%{opacity:1}}
+  @keyframes pvPop{0%{opacity:0;transform:scale(.5)}40%,100%{opacity:1;transform:scale(1)}}
+  @keyframes pvZoom{0%{opacity:0;transform:scale(1.5)}40%,100%{opacity:1;transform:scale(1)}}
+  @keyframes pvBlur{0%{opacity:0;filter:blur(5px)}40%,100%{opacity:1;filter:blur(0)}}
+  @keyframes pvWipe{0%{clip-path:inset(0 100% 0 0)}40%,100%{clip-path:inset(0 0 0 0)}}
+  @keyframes pvBreathe{0%{opacity:0;transform:scale(.85)}30%{opacity:1;transform:scale(1.1)}
+                       50%,100%{transform:scale(1)}}
+  @keyframes pvNone{0%,100%{opacity:1}}
+
   /* ---------------- SAVE INDICATOR ---------------- */
   .savest{font-size:11.5px;font-weight:700;color:var(--muted);white-space:nowrap;
           padding:0 4px;min-width:60px;text-align:right;transition:color .2s;}
@@ -638,6 +695,19 @@
 
 <!-- ======= INSPECTOR ======= -->
 <div class="insp" id="insp"></div>
+
+<!-- ======= CONTEXT TOOLBAR ======= -->
+<div class="ctxbar" id="ctxbar"></div>
+
+<!-- ======= ANIMATE ======= -->
+<div class="animp" id="animp">
+  <div class="fhead"><h3>✨ Animate</h3><button class="fx" id="animClose">✕</button></div>
+  <div class="atabs">
+    <button class="atab on" data-atab="element">Element</button>
+    <button class="atab" data-atab="board">Whole board</button>
+  </div>
+  <div id="animBody"></div>
+</div>
 
 <!-- ======= GALLERY ======= -->
 <div class="galp" id="galp">
@@ -965,7 +1035,9 @@ const ANIMS = {
   right: 'Daayin se',
   pop:   'Chhoti se badi',
   zoom:  'Badi se apne naap par',
-  blur:  'Dhundhli se saaf hoti hui'
+  blur:  'Dhundhli se saaf hoti hui',
+  wipe:  'Ek taraf se khulti hui',
+  breathe:'Halka sa uchhal kar'
 };
 let defaultAnim = 'fade', animMs = 420, animStagger = 90;
 
@@ -989,6 +1061,12 @@ function revealFx(o){
   if(kind === 'pop')   return { a:e, dx:0, dy:0, s:0.86 + 0.14*e };
   if(kind === 'zoom')  return { a:e, dx:0, dy:0, s:1.18 - 0.18*e };
   if(kind === 'blur')  return { a:e, dx:0, dy:0, s:1, blur:(1 - e)*7 };
+  if(kind === 'wipe')  return { a:1, dx:0, dy:0, s:1, wipe:e };
+  if(kind === 'breathe'){
+    // halka overshoot — 1 ke thoda upar jaake wapas aata hai
+    const os = Math.sin(clamp(k, 0, 1)*Math.PI)*0.06;
+    return { a:e, dx:0, dy:0, s:0.9 + 0.1*e + os };
+  }
   return { a:e, dx:0, dy:0, s:1 };                        // fade
 }
 /* Ek hi step ki cheezein ek saath tapak-ne ki jagah ek-ek karke aati hain
@@ -1650,7 +1728,7 @@ function draw(){
   for(let L = 0; L <= 2; L++){
     for(const o of paint){
       if(layer(o) !== L) continue;
-      dimA = dimOf(o);
+      dimA = dimOf(o) * (o.opacity === undefined ? 1 : clamp(o.opacity, 0, 1));
       const fx2 = revealFx(o);
       if(fx2){
         const b = bbox(o), cx = b.x + b.w/2, cy = b.y + b.h/2;
@@ -1661,6 +1739,11 @@ function draw(){
         dimA *= fx2.a;
         ctx.globalAlpha = dimA;
         if(fx2.blur) ctx.filter = `blur(${fx2.blur.toFixed(2)}px)`;
+        if(fx2.wipe !== undefined){
+          ctx.beginPath();
+          ctx.rect(b.x - 4, b.y - 4, (b.w + 8)*clamp(fx2.wipe, 0, 1), b.h + 8);
+          ctx.clip();
+        }
         drawObject(o);
         ctx.filter = 'none';
         ctx.restore();
@@ -2596,14 +2679,30 @@ function wrap(text, maxW){
 function drawTextObj(o){
   ctx.save();
   ctx.fillStyle = resolveColor(o.color);
-  ctx.font = `${o.weight || 800} ${o.size}px ${FONT.head}`;
+  ctx.font = `${o.italic ? 'italic ' : ''}${o.weight || 800} ${o.size}px ${FONT.head}`;
   const al = o.align || 'left';
   ctx.textAlign = al; ctx.textBaseline = 'top';
   const lh = o.size*(o.lh || 1.28);
-  // text kis kinare se shuru ho — align ke hisaab se
   const tx = al === 'center' ? o.x + o.w/2 : al === 'right' ? o.x + o.w : o.x;
-  setAutoH(o, Math.max(o.size, wrap(o.text || '', o.w).length*lh));
-  wrap(typedText(o), o.w).forEach((l, i) => ctx.fillText(l, tx, o.y + i*lh));
+  const shape = t => o.upper ? String(t).toUpperCase() : t;
+  setAutoH(o, Math.max(o.size, wrap(shape(o.text || ''), o.w).length*lh));
+
+  const lines = wrap(shape(typedText(o)), o.w);
+  lines.forEach((l, i) => {
+    const y = o.y + i*lh;
+    ctx.fillText(l, tx, y);
+    // underline / strike khud kheenchni padti hai — canvas me inka koi flag nahi
+    if(o.underline || o.strike){
+      const w2 = ctx.measureText(l).width;
+      const x0 = al === 'center' ? tx - w2/2 : al === 'right' ? tx - w2 : tx;
+      ctx.strokeStyle = resolveColor(o.color);
+      ctx.lineWidth = Math.max(1, o.size*0.055);
+      if(o.underline){ const uy = y + o.size*1.04;
+        ctx.beginPath(); ctx.moveTo(x0, uy); ctx.lineTo(x0 + w2, uy); ctx.stroke(); }
+      if(o.strike){ const sy = y + o.size*0.62;
+        ctx.beginPath(); ctx.moveTo(x0, sy); ctx.lineTo(x0 + w2, sy); ctx.stroke(); }
+    }
+  });
   ctx.restore();
 }
 
@@ -3736,9 +3835,12 @@ $('sizeRange').addEventListener('change', () => { sizeSnapped = false; });
 /* ----------------------------- INSPECTOR ----------------------------- */
 function refreshInspector(){
   if($('layp') && $('layp').classList.contains('on')) renderLayers();
+  if($('ctxbar')) renderCtxBar();
+  if($('animp') && $('animp').classList.contains('on')) renderAnim();
   const box = $('insp');
   const list = selObjs();
   if(!list.length || present){ box.classList.remove('on'); box.innerHTML = ''; return; }
+  if($('animp').classList.contains('on')) { box.classList.remove('on'); return; }
   box.classList.add('on');
 
   if(list.length > 1){
@@ -4029,7 +4131,8 @@ function bindInspector(list){
       if(['fill','animate','dashed','typeOn','pulse'].includes(k)) v = v === '1' || v === 1 || v === true;
       list.forEach(o => { if(k in o || ['emoji','title','detail','text','label','hl','notes','typeOn','cps','icon','pulse','kind',
                              'variant','n','phase','action','expect','mistake',
-                             'mode','shape','anim','animMs','align','lh','weight'].includes(k)) o[k] = v; });
+                             'mode','shape','anim','animMs','align','lh','weight',
+                             'italic','underline','strike','upper','opacity'].includes(k)) o[k] = v; });
       if(['kind','variant','mode','shape','anim'].includes(k)) refreshInspector();          // browser ka URL field aata/jata hai
       if(k === 'typeOn') refreshInspector();      // speed field aata/jata hai
       save(); requestDraw();
@@ -6822,6 +6925,188 @@ async function importKeys(file){
     // AES-GCM galat password pe decrypt hi nahi hota — isliye ye pakka jawab hai
     toast('⚠️ Wrong password, or the file is damaged');
   }
+}
+
+/* ================= CONTEXT TOOLBAR + ANIMATE PANEL =================
+   Canva jaisa: jo select kiya hai uske hisaab se upar ek chhoti patti aa jaati
+   hai — wahi cheezein jo us cheez pe sach me lagti hain, aur kuch nahi.
+   Poora inspector abhi bhi daayin taraf hai; ye tez wale kaamon ke liye hai. */
+const ANIM_CARDS = [
+  { k:'none',    n:'None',     pv:'pvNone' },
+  { k:'up',      n:'Rise',     pv:'pvRise' },
+  { k:'down',    n:'Drop',     pv:'pvDrop' },
+  { k:'left',    n:'Pan',      pv:'pvPan' },
+  { k:'right',   n:'Pan right',pv:'pvPanR' },
+  { k:'fade',    n:'Fade',     pv:'pvFade' },
+  { k:'pop',     n:'Pop',      pv:'pvPop' },
+  { k:'zoom',    n:'Zoom',     pv:'pvZoom' },
+  { k:'blur',    n:'Blur',     pv:'pvBlur' },
+  { k:'wipe',    n:'Wipe',     pv:'pvWipe' },
+  { k:'breathe', n:'Breathe',  pv:'pvBreathe' }
+];
+
+let animTab = 'element';
+function openAnim(on){
+  const p = $('animp');
+  const show = on === undefined ? !p.classList.contains('on') : on;
+  p.classList.toggle('on', show);
+  if(show){ $('insp').classList.remove('on'); renderAnim(); }
+  else refreshInspector();
+}
+function renderAnim(){
+  const list = selObjs();
+  const perEl = animTab === 'element';
+  if(perEl && !list.length){
+    $('animBody').innerHTML = `<p class="ghint">Board pe kuch select karo — phir uske liye
+      andaz chuno. Ya “Whole board” tab se sabke liye default set karo.</p>`;
+    return;
+  }
+  const cur = perEl ? (list[0].anim || '') : defaultAnim;
+  const ms  = perEl ? (list[0].animMs || animMs) : animMs;
+  $('animBody').innerHTML =
+    (perEl ? `<p class="ghint">${list.length} selected · khaali chhodo to board ka default chalega</p>` : '')
+    + `<div class="agrid">`
+    + (perEl ? `<button class="acard ${!cur?'on':''}" data-anim=""
+         style="--pv:pvFade"><span class="astage"><i class="abox"></i></span><span>Default</span></button>` : '')
+    + ANIM_CARDS.map(a =>
+        `<button class="acard ${cur===a.k?'on':''}" data-anim="${a.k}" style="--pv:${a.pv}">
+           <span class="astage"><i class="abox"></i></span><span>${a.n}</span>
+         </button>`).join('')
+    + `</div>`
+    + `<div class="fld" style="margin-top:14px">${lbl('Speed · ' + ms + 'ms',
+        'Kitne millisecond me poori hogi. 420 normal, 800 dheema.')}
+        <input type="range" id="animSpeed" min="120" max="1400" step="20" value="${ms}" style="width:100%"></div>`
+    + (perEl ? '' : `<div class="fld">${lbl('Stagger · ' + animStagger + 'ms',
+        'Ek hi step ki cheezein itni der ke farak se ek-ek karke aayengi.')}
+        <input type="range" id="animStag" min="0" max="400" step="10" value="${animStagger}" style="width:100%"></div>`);
+
+  $('animBody').querySelectorAll('[data-anim]').forEach(b => b.addEventListener('click', () => {
+    const v = b.dataset.anim;
+    if(perEl){ snapshot(); selObjs().forEach(o => { if(v) o.anim = v; else delete o.anim; }); }
+    else defaultAnim = v || 'fade';
+    save(); renderAnim(); requestDraw();
+    previewAnim();
+  }));
+  const sp = $('animSpeed');
+  if(sp) sp.addEventListener('input', () => {
+    const v = +sp.value;
+    if(perEl){ selObjs().forEach(o => o.animMs = v); } else animMs = v;
+    save(); renderAnim(); previewAnim();
+  });
+  const st = $('animStag');
+  if(st) st.addEventListener('input', () => { animStagger = +st.value; save(); renderAnim(); });
+  armTooltips($('animBody'));
+}
+/* chuno to turant board pe chal ke dikhe — warna Present me jaakar dekhna padta */
+function previewAnim(){
+  const list = selObjs();
+  if(!list.length) return;
+  const now = performance.now();
+  for(const o of list) if(animOf(o) !== 'none') revealState.set(o.id, now);
+  requestDraw();
+}
+$('animClose').addEventListener('click', () => openAnim(false));
+document.querySelectorAll('[data-atab]').forEach(b => b.addEventListener('click', () => {
+  animTab = b.dataset.atab;
+  document.querySelectorAll('[data-atab]').forEach(x => x.classList.toggle('on', x === b));
+  renderAnim();
+}));
+
+/* ---- upar wali chhoti patti ---- */
+function renderCtxBar(){
+  const bar = $('ctxbar');
+  const list = selObjs();
+  if(!list.length || present){ bar.classList.remove('on'); bar.innerHTML = ''; return; }
+  const o = list[0];
+  const many = list.length > 1;
+  let h = '';
+
+  const step = (label, key, val, tip) =>
+    `<div class="cstep" data-tip="${esc(tip)}">
+       <button data-nudge="${key}:-1">−</button>
+       <input data-num="${key}" value="${val}">
+       <button data-nudge="${key}:1">＋</button>
+     </div>`;
+
+  if(!many && o.type === 'text'){
+    h += step('Size', 'size', Math.round(o.size), 'Akshar ka naap');
+    h += `<div class="cdiv"></div>`;
+    h += `<button class="cbtn ${o.weight >= 800 ? 'on' : ''}" data-tog="weight" data-tip="Bold — mota"><b>B</b></button>`;
+    h += `<button class="cbtn ${o.italic ? 'on' : ''}" data-tog="italic" data-tip="Italic — tirchha"><i>I</i></button>`;
+    h += `<button class="cbtn ${o.underline ? 'on' : ''}" data-tog="underline" data-tip="Underline — neeche line"><u>U</u></button>`;
+    h += `<button class="cbtn ${o.strike ? 'on' : ''}" data-tog="strike" data-tip="Strikethrough — kaati hui"><s>S</s></button>`;
+    h += `<button class="cbtn ${o.upper ? 'on' : ''}" data-tog="upper" data-tip="CAPITALS — sab bade akshar">aA</button>`;
+    h += `<div class="cdiv"></div>`;
+    const A2 = { left:'⯇', center:'≡', right:'⯈' };
+    const nextAl = { left:'center', center:'right', right:'left' };
+    h += `<button class="cbtn" data-align="${nextAl[o.align || 'left']}"
+            data-tip="Align — abhi ${o.align || 'left'}. Dabao to badlega.">${A2[o.align || 'left']}</button>`;
+    h += step('Line', 'lh', (o.lh || 1.28).toFixed(2), 'Lines ke beech ki jagah');
+    h += `<div class="cdiv"></div>`;
+  }
+  if(!many && (o.type === 'stroke' || o.type === 'shape' || o.type === 'link')){
+    h += step('Size', 'size', Math.round(o.size || 3), 'Line kitni moti');
+    h += `<div class="cdiv"></div>`;
+  }
+  if(!many && (o.type === 'card' || o.type === 'note' || o.type === 'step' || o.type === 'code')){
+    h += `<button class="cbtn txt" data-focus="title" data-tip="Text badlo — daayin panel me le jayega">✏️ Text</button>`;
+    h += `<div class="cdiv"></div>`;
+  }
+
+  h += `<button class="cbtn" data-swatch="1" data-tip="Colour — neeche wali strip se rang chuno">
+          <span class="cswatch" style="background:${o.color && o.color !== 'ink' ? o.color : 'linear-gradient(135deg,#2E7CF6,#FFD23F)'}"></span>
+        </button>`;
+  h += step('Opacity', 'opacity', Math.round((o.opacity === undefined ? 1 : o.opacity)*100), 'Kitni gehri dikhe (100 = poori)');
+  h += `<div class="cdiv"></div>`;
+  h += `<button class="cbtn txt" data-open="anim" data-tip="Animate — screen par kaise aayegi">✨ Animate</button>`;
+  h += `<button class="cbtn txt" data-open="insp" data-tip="Position aur baaki sab settings">⚙ More</button>`;
+  bar.innerHTML = h;
+  bar.classList.add('on');
+  armTooltips(bar);
+
+  const apply = fn => { snapshot(); list.forEach(fn); save(); requestDraw(); renderCtxBar(); refreshInspector(); };
+  bar.querySelectorAll('[data-tog]').forEach(b => b.addEventListener('click', () => {
+    const k = b.dataset.tog;
+    if(k === 'weight') apply(x => x.weight = (x.weight >= 800 ? 400 : 800));
+    else apply(x => x[k] = !x[k]);
+  }));
+  bar.querySelectorAll('[data-align]').forEach(b =>
+    b.addEventListener('click', () => apply(x => x.align = b.dataset.align)));
+  bar.querySelectorAll('[data-nudge]').forEach(b => b.addEventListener('click', () => {
+    const [k, d] = b.dataset.nudge.split(':');
+    const dir = +d;
+    apply(x => {
+      if(k === 'opacity'){ const v = (x.opacity === undefined ? 1 : x.opacity) + dir*0.1;
+                           x.opacity = clamp(+v.toFixed(2), 0.1, 1); }
+      else if(k === 'lh'){ x.lh = clamp(+(((x.lh || 1.28) + dir*0.08).toFixed(2)), 0.8, 3); }
+      else x[k] = Math.max(1, Math.round((x[k] || 1) + dir*(k === 'size' ? 2 : 1)));
+    });
+  }));
+  bar.querySelectorAll('[data-num]').forEach(inp => {
+    inp.addEventListener('keydown', e => e.stopPropagation());
+    inp.addEventListener('change', () => {
+      const k = inp.dataset.num, v = parseFloat(inp.value);
+      if(!isFinite(v)) return;
+      apply(x => {
+        if(k === 'opacity') x.opacity = clamp(v/100, 0.05, 1);
+        else if(k === 'lh') x.lh = clamp(v, 0.8, 3);
+        else x[k] = Math.max(1, v);
+      });
+    });
+  });
+  bar.querySelectorAll('[data-swatch]').forEach(b => b.addEventListener('click', () => {
+    $('brush').classList.add('on');
+    toast('Neeche wali colour strip se rang chuno');
+  }));
+  bar.querySelectorAll('[data-open]').forEach(b => b.addEventListener('click', () => {
+    if(b.dataset.open === 'anim') openAnim(true);
+    else { openAnim(false); $('insp').classList.add('on'); }
+  }));
+  bar.querySelectorAll('[data-focus]').forEach(b => b.addEventListener('click', () => {
+    openAnim(false); refreshInspector();
+    setTimeout(() => { const i = $('insp').querySelector('[data-k="title"],[data-k="text"]');
+                       if(i){ i.focus(); i.select && i.select(); } }, 30);
+  }));
 }
 
 /* ============================ LAYERS ============================
