@@ -352,6 +352,23 @@
     font-size:13px;font-weight:800;outline:none;color:var(--ink);}
   .cswatch{width:26px;height:26px;border-radius:8px;border:2px solid var(--line);flex:0 0 26px;}
 
+  /* ---------------- SETTINGS ---------------- */
+  .srow{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);}
+  .srow:last-child{border-bottom:0;}
+  .sleft{flex:1;min-width:0;}
+  .sleft b{display:block;font-size:13.5px;font-weight:800;}
+  .sleft span{display:block;font-size:12px;color:var(--muted);line-height:1.5;margin-top:2px;}
+  .sright{flex:0 0 auto;display:flex;gap:6px;align-items:center;}
+  .sin{width:190px;background:var(--panel2);border:1.5px solid var(--line);border-radius:9px;
+       padding:8px 10px;font-size:12.5px;outline:none;
+       font-family:'JetBrains Mono',ui-monospace,monospace;}
+  .sin:focus{border-color:var(--blue);}
+  .sin.narrow{width:96px;font-family:inherit;}
+  .spill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;
+         font-size:11.5px;font-weight:800;background:var(--panel2);color:var(--muted);}
+  .spill.ok{background:rgba(61,220,151,.16);color:#1E9E68;}
+  .spill.no{background:rgba(228,72,74,.14);color:var(--red);}
+
   /* ---------------- ANIMATE PANEL ---------------- */
   .animp{position:fixed;right:16px;top:70px;width:300px;z-index:39;display:none;
     padding:14px;border-radius:20px;background:var(--panel-solid);border:1px solid var(--line);
@@ -642,6 +659,7 @@
   <button class="tbtn rec" id="recBtn" title="Start / stop recording">⏺ Record</button>
   <button class="tbtn" id="recMode" title="What gets recorded">🎥 Board</button>
   <button class="tbtn" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
   <button class="tbtn blue" id="installBtn" title="Install — app ki tarah lag jayega, offline bhi chalega" style="display:none">⬇︎ Install</button>
   <button class="tbtn" id="updBtn" title="Naya version aa gaya — dabao to lag jayega" style="display:none">↻ Update</button>
   <button class="tbtn" id="helpBtn" title="Shortcuts (?)">?</button>
@@ -903,6 +921,17 @@
 <div class="toast" id="toast"></div>
 <div class="tipbox" id="tipbox"></div>
 <div class="recdot" id="recDot"><i></i><span id="recTime">0:00</span></div>
+
+<!-- ======= SETTINGS ======= -->
+<div class="help" id="setModal">
+  <div class="helpbox">
+    <button class="helpx" id="setClose">✕</button>
+    <h3>⚙ Settings</h3>
+    <p class="hsub">Keys, defaults aur backup — sab ek jagah. Keys is browser me hi rehti hain,
+       app ki file me kabhi nahi jaatin.</p>
+    <div id="setBody"></div>
+  </div>
+</div>
 
 <!-- ======= SHORTCUTS ======= -->
 <div class="help" id="help">
@@ -6926,6 +6955,121 @@ async function importKeys(file){
     toast('⚠️ Wrong password, or the file is damaged');
   }
 }
+
+/* ============================ SETTINGS ============================
+   Sab kuch ek jagah, taaki key dhoondhne ke liye gallery ke andar na jaana pade. */
+function pill(on, yes, no){ return `<span class="spill ${on?'ok':'no'}">${on ? yes : no}</span>`; }
+
+function renderSettings(){
+  const usedKB = (() => {
+    let n = 0;
+    try{ for(const k in localStorage) if(localStorage.hasOwnProperty(k)) n += (localStorage[k]||'').length; }catch(err){}
+    return Math.round(n/1024);
+  })();
+
+  $('setBody').innerHTML = `
+    <div class="sect">🤖 AI (Groq)</div>
+    <div class="srow"><div class="sleft"><b>API key</b>
+      <span>console.groq.com se free. Script likhne aur ✨ Clean up ke liye.</span></div>
+      <div class="sright">${pill(!!aiKey,'Connected','Not set')}
+        <input class="sin" id="sGroq" type="password" placeholder="gsk_…" value="${esc(aiKey)}">
+        <button class="ib" id="sGroqSave" style="flex:0 0 auto;min-width:64px">Save</button></div></div>
+    <div class="srow"><div class="sleft"><b>Model</b>
+      <span>${aiModel ? esc(aiModel) : 'Key save karte hi Groq ki list se sabse tez model chun liya jayega.'}</span></div>
+      <div class="sright"><button class="ib" id="sGroqModel" style="flex:0 0 auto">Re-pick</button></div></div>
+
+    <div class="sect">📺 YouTube</div>
+    <div class="srow"><div class="sleft"><b>Data API key</b>
+      <span>Google Cloud → YouTube Data API v3. Sirf usi API tak restrict karna.</span></div>
+      <div class="sright">${pill(!!ytKey,'Set','Not set')}
+        <input class="sin" id="sYt" type="password" placeholder="AIza…" value="${esc(ytKey)}"></div></div>
+    <div class="srow"><div class="sleft"><b>Channel</b>
+      <span>${brand ? esc(brand.name) + ' · ' + esc(fmtSubs(brand.subs)) : 'Handle daalo — Subscribe card, watermark aur end card usi se banenge.'}</span></div>
+      <div class="sright">
+        <input class="sin narrow" id="sHandle" placeholder="@handle" value="${brand ? esc(brand.handle) : ''}">
+        <button class="ib" id="sYtGo" style="flex:0 0 auto;min-width:76px">${brand ? 'Refresh' : 'Connect'}</button>
+        ${brand ? '<button class="ib danger" id="sYtOff" style="flex:0 0 auto">✕</button>' : ''}</div></div>
+
+    <div class="sect">🔐 Keys ko doosre computer pe le jaana</div>
+    <div class="srow"><div class="sleft"><b>Encrypted key file</b>
+      <span>Keys kabhi app ki file me nahi jaatin. Ye ek alag file banata hai jo aapke password
+        se locked hai — <b>file + password dono</b> chahiye. Sirf file mil jaye to usme kuch nahi.</span></div>
+      <div class="sright">
+        <button class="ib" id="sExpKeys" style="flex:0 0 auto">⬇︎ Export</button>
+        <button class="ib" id="sImpKeys" style="flex:0 0 auto">⬆︎ Import</button></div></div>
+
+    <div class="sect">🎬 Board defaults</div>
+    <div class="srow"><div class="sleft"><b>Entrance</b><span>Naye objects kaise aayenge.</span></div>
+      <div class="sright"><select class="sin narrow" id="sAnim">` +
+        Object.keys(ANIMS).map(k => `<option value="${k}"${defaultAnim===k?' selected':''}>${ANIMS[k].split(' — ')[0]}</option>`).join('') +
+      `</select></div></div>
+    <div class="srow"><div class="sleft"><b>Speed</b><span>Millisecond. 420 normal.</span></div>
+      <div class="sright"><input class="sin narrow" id="sAnimMs" type="number" value="${animMs}"></div></div>
+    <div class="srow"><div class="sleft"><b>Stagger</b><span>Ek step ki cheezein itne farak se ek-ek karke.</span></div>
+      <div class="sright"><input class="sin narrow" id="sStag" type="number" value="${animStagger}"></div></div>
+    <div class="srow"><div class="sleft"><b>Dot grid</b><span>Background ke dots.</span></div>
+      <div class="sright"><button class="ib" id="sGrid" style="flex:0 0 auto">${showGrid?'On':'Off'}</button></div></div>
+    <div class="srow"><div class="sleft"><b>Snapping</b><span>Drag karte waqt align guides.</span></div>
+      <div class="sright"><button class="ib" id="sSnap" style="flex:0 0 auto">${snapOn?'On':'Off'}</button></div></div>
+
+    <div class="sect">💾 Storage</div>
+    <div class="srow"><div class="sleft"><b>${boards.length} board${boards.length===1?'':'s'}</b>
+      <span>Boards IndexedDB me hain; settings ${usedKB} KB localStorage me.
+        Ye is browser + is address se bandhe hain — file badlo to saath nahi aayenge.</span></div>
+      <div class="sright"><button class="ib" id="sBackup" style="flex:0 0 auto">⬇︎ Backup all</button></div></div>`;
+  armTooltips($('setBody'));
+
+  const on = (id, fn) => { const el = $(id); if(el) el.addEventListener('click', fn); };
+  for(const id of ['sGroq','sYt','sHandle','sAnimMs','sStag'])
+    if($(id)) $(id).addEventListener('keydown', e => e.stopPropagation());
+
+  on('sGroqSave', () => {
+    aiKey = ($('sGroq').value || '').trim();
+    try{ localStorage.setItem(LS_AIKEY, aiKey); }catch(err){}
+    if($('aiKey')) $('aiKey').value = aiKey;
+    if(!aiKey){ renderSettings(); toast('Key cleared'); return; }
+    pickModel(true).then(m => { renderSettings(); toast('Saved · using ' + m); })
+                   .catch(() => { renderSettings(); toast('⚠️ Groq did not accept that key'); });
+  });
+  on('sGroqModel', () => pickModel(true).then(m => { renderSettings(); toast('Now using ' + m); })
+                                        .catch(() => toast('⚠️ Could not reach Groq')));
+  on('sYtGo', () => {
+    ytKey = ($('sYt').value || '').trim();
+    try{ localStorage.setItem(LS_YTKEY, ytKey); }catch(err){}
+    connectChannel($('sHandle').value).then(() => renderSettings());
+  });
+  on('sYtOff', async () => { brand = null; await storeDel('brandkit'); buildGallery(); renderSettings(); });
+  on('sExpKeys', exportKeys);
+  on('sImpKeys', () => $('keyPick').click());
+  on('sGrid', () => { toggleGrid(); renderSettings(); });
+  on('sSnap', () => { snapOn = !snapOn; save(); renderSettings(); toast(snapOn?'Snapping on':'Snapping off'); });
+  on('sBackup', backupAllBoards);
+  const sa = $('sAnim'); if(sa) sa.addEventListener('change', () => { defaultAnim = sa.value; save(); });
+  const sm = $('sAnimMs'); if(sm) sm.addEventListener('change', () => { animMs = clamp(+sm.value||420, 80, 3000); save(); });
+  const ss = $('sStag'); if(ss) ss.addEventListener('change', () => { animStagger = clamp(+ss.value||0, 0, 900); save(); });
+}
+
+/* Saare boards ek hi JSON me — 26 videos ka kaam ek browser ke bharose rakhna theek nahi */
+async function backupAllBoards(){
+  toast('Packing every board…');
+  const out = { kind:'tbv-backup-1', at:new Date().toISOString(), boards:[] };
+  for(const b of boards){
+    const d = await storeGet(b.id);
+    if(d) out.boards.push({ meta:b, doc:d });
+  }
+  dl(URL.createObjectURL(new Blob([JSON.stringify(out)], { type:'application/json' })),
+     'explainer-studio-backup.json');
+  toast(`Backed up ${out.boards.length} board${out.boards.length===1?'':'s'} ✓`);
+}
+
+function openSettings(on2){
+  const show = on2 === undefined ? !$('setModal').classList.contains('on') : on2;
+  $('setModal').classList.toggle('on', show);
+  if(show) renderSettings();
+}
+$('setBtn').addEventListener('click', () => openSettings());
+$('setClose').addEventListener('click', () => openSettings(false));
+$('setModal').addEventListener('click', e => { if(e.target.id === 'setModal') openSettings(false); });
 
 /* ================= CONTEXT TOOLBAR + ANIMATE PANEL =================
    Canva jaisa: jo select kiya hai uske hisaab se upar ek chhoti patti aa jaati
