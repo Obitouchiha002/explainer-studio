@@ -382,12 +382,19 @@
     padding:8px 4px 7px;transition:.13s;overflow:hidden;}
   .acard:hover{border-color:var(--blue);}
   .acard.on{border-color:var(--blue);background:var(--blue-soft);}
-  .astage{height:44px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
-  .abox{width:20px;height:26px;border-radius:4px;background:var(--blue);}
-  .acard span{display:block;font-size:10.5px;font-weight:800;color:var(--sub);margin-top:5px;}
-  .acard.on span{color:var(--blue);}
+  /* NOTE: pehle yahan `.acard span` tha jo DONO spans pe lagta tha — usne
+     .astage ka flex maar diya aur andar wala <i> inline reh gaya. Inline element
+     pe width/height lagti hi nahi, isliye preview box gayab tha. Ab label ka
+     apna class hai aur box explicitly block hai. */
+  .astage{display:flex !important;height:44px;align-items:center;justify-content:center;
+          overflow:hidden;margin:0 !important;}
+  .abox{display:block;width:20px;height:26px;border-radius:4px;background:var(--blue);
+        box-shadow:0 2px 6px rgba(46,124,246,.35);}
+  .alabel{display:block;font-size:10.5px;font-weight:800;color:var(--sub);margin-top:5px;}
+  .acard.on .alabel{color:var(--blue);}
   /* har card apni animation loop me dikhata hai — Canva jaisa */
-  .acard:hover .abox,.acard.on .abox{animation:var(--pv) 1.5s ease-in-out infinite;}
+  .acard .abox{animation:var(--pv) 2.2s ease-in-out infinite;}
+  .acard:hover .abox,.acard.on .abox{animation-duration:1.4s;}
   @keyframes pvRise{0%{opacity:0;transform:translateY(14px)}40%,100%{opacity:1;transform:none}}
   @keyframes pvPan{0%{opacity:0;transform:translateX(-16px)}40%,100%{opacity:1;transform:none}}
   @keyframes pvPanR{0%{opacity:0;transform:translateX(16px)}40%,100%{opacity:1;transform:none}}
@@ -7111,10 +7118,10 @@ function renderAnim(){
     (perEl ? `<p class="ghint">${list.length} selected · khaali chhodo to board ka default chalega</p>` : '')
     + `<div class="agrid">`
     + (perEl ? `<button class="acard ${!cur?'on':''}" data-anim=""
-         style="--pv:pvFade"><span class="astage"><i class="abox"></i></span><span>Default</span></button>` : '')
+         style="--pv:pvFade"><span class="astage"><i class="abox"></i></span><span class="alabel">Default</span></button>` : '')
     + ANIM_CARDS.map(a =>
         `<button class="acard ${cur===a.k?'on':''}" data-anim="${a.k}" style="--pv:${a.pv}">
-           <span class="astage"><i class="abox"></i></span><span>${a.n}</span>
+           <span class="astage"><i class="abox"></i></span><span class="alabel">${a.n}</span>
          </button>`).join('')
     + `</div>`
     + `<div class="fld" style="margin-top:14px">${lbl('Speed · ' + ms + 'ms',
