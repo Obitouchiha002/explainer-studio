@@ -15,18 +15,38 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Mukta:wght@400;600;700&family=Anton&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
+  /* Contrast poora badla gaya. Pehle --line itni halki thi (#EAEDF3) ki panel
+     canvas me ghul jaate the aur kinara dikhta hi nahi tha. Ab har surface ka
+     apna saaf kinara hai, glass asli lagta hai (blur + saturate + andar ki
+     halki roshni), aur muted text bhi padhne layak gehra hai. */
   :root{
-    --bg:#0A0E1A; --panel:rgba(17,26,46,.86); --panel-solid:#111a2e; --panel2:#0d1424;
-    --line:#22304d; --ink:#ffffff; --muted:#8A94A6; --sub:#C7D0E0;
-    --blue:#2E7CF6; --blue-soft:rgba(46,124,246,.16); --yellow:#FFD23F; --red:#FF6B6B;
-    --shadow:0 18px 50px rgba(0,0,0,.55); --shadow-sm:0 4px 16px rgba(0,0,0,.4);
+    --bg:#0A0E1A;
+    --panel:rgba(15,23,42,.72); --panel-solid:#111a2e; --panel2:#182238;
+    --line:#496294; --line-soft:#2C3D5F;
+    --ink:#ffffff; --muted:#9FAEC8; --sub:#D3DCEC;
+    --blue:#4C8DFF; --blue-soft:rgba(76,141,255,.20); --yellow:#FFD23F; --red:#FF6B6B;
+    --glass-hi:rgba(255,255,255,.10);
+    --shadow:0 20px 50px rgba(0,0,0,.60); --shadow-sm:0 4px 16px rgba(0,0,0,.45);
   }
   :root[data-theme="light"]{
-    --bg:#FFFFFF; --panel:rgba(255,255,255,.94); --panel-solid:#ffffff; --panel2:#F7F8FB;
-    --line:#EAEDF3; --ink:#111827; --muted:#98A2B3; --sub:#475467;
-    --blue:#2E7CF6; --blue-soft:rgba(46,124,246,.09); --yellow:#E09B00; --red:#E4484A;
-    --shadow:0 10px 30px rgba(16,24,40,.07); --shadow-sm:0 2px 8px rgba(16,24,40,.05);
+    --bg:#FFFFFF;
+    --panel:rgba(255,255,255,.78); --panel-solid:#ffffff; --panel2:#EEF1F7;
+    --line:#7C8BA8; --line-soft:#C6CFDE;
+    --ink:#0C1220; --muted:#5B6880; --sub:#33405A;
+    --blue:#1F6FEB; --blue-soft:rgba(31,111,235,.12); --yellow:#B87400; --red:#D93A3C;
+    --glass-hi:rgba(255,255,255,.85);
+    --shadow:0 16px 40px rgba(12,18,32,.16); --shadow-sm:0 3px 12px rgba(12,18,32,.10);
   }
+  /* Har floating surface ek jaisa glass — blur, saaf kinara, aur upar ek halki
+     roshni ki lakeer jo use canvas se alag karti hai. */
+  .top,.dock,.brush,.zoom,.insp,.galp,.layp,.flowp,.animp,.pop,.ctxbar,.findbar,
+  .pdock,.pctl,.notes,.spanel,.helpbox,.startp,.recdot,.tipbox,.toast{
+    backdrop-filter:blur(22px) saturate(170%);
+    -webkit-backdrop-filter:blur(22px) saturate(170%);
+    box-shadow:var(--shadow), inset 0 1px 0 var(--glass-hi);
+  }
+  .top,.dock,.brush,.zoom,.insp,.galp,.layp,.flowp,.animp,.pop,.ctxbar,.findbar,
+  .pdock,.pctl,.spanel,.helpbox,.startp{ border:1px solid var(--line) !important; }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{height:100%;overflow:hidden;}
   body{background:var(--bg);color:var(--ink);font-family:'Mukta',system-ui,sans-serif;
@@ -63,15 +83,16 @@
   .top .spacer{flex:1 1 auto;min-width:8px;}
   .brand{font-family:'Anton';font-size:17px;letter-spacing:.6px;white-space:nowrap;}
   .brand .y{color:var(--yellow);}
-  .divider{width:1px;height:24px;background:var(--line);flex:0 0 1px;}
+  .divider{width:1px;height:24px;background:var(--line);flex:0 0 1px;opacity:.8;}
   .bname{background:transparent;border:1px solid transparent;border-radius:9px;padding:6px 10px;
          font-weight:700;font-size:15px;min-width:90px;max-width:210px;outline:none;}
   .bname:hover{border-color:var(--line);}
   .bname:focus{border-color:var(--blue);background:var(--panel2);}
   .spacer{flex:1;}
   .tbtn{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:11px;
-        font-weight:700;font-size:14px;color:var(--sub);transition:.15s;white-space:nowrap;}
-  .tbtn:hover{background:var(--panel2);color:var(--ink);}
+        font-weight:700;font-size:14px;color:var(--sub);transition:.15s;white-space:nowrap;
+        border:1px solid transparent;}
+  .tbtn:hover{background:var(--panel2);color:var(--ink);border-color:var(--line);}
   .tbtn:disabled{opacity:.32;cursor:default;}
   .tbtn:disabled:hover{background:none;}
   .tbtn.solid{background:var(--yellow);color:#0A0E1A;}
@@ -87,8 +108,9 @@
   .dock::-webkit-scrollbar{display:none}
   .tool{transform-origin:50% 85%;will-change:transform;}
   .tool{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;
-        font-size:19px;transition:.14s cubic-bezier(.2,.8,.2,1);position:relative;flex:0 0 42px;}
-  .tool:hover{background:var(--panel2);transform:translateY(-2px);}
+        font-size:19px;transition:.14s cubic-bezier(.2,.8,.2,1);position:relative;flex:0 0 42px;
+        border:1px solid transparent;}
+  .tool:hover{background:var(--panel2);border-color:var(--line);transform:translateY(-2px);}
   .tool.on{background:var(--blue);color:#fff;transform:translateY(-4px);
            box-shadow:0 8px 18px rgba(46,124,246,.4);}
   .dock .divider{margin:0 5px;height:26px;}
@@ -248,7 +270,8 @@
   .brow .x{opacity:.4;font-size:15px;padding:2px 5px;border-radius:6px;}
   .brow .x:hover{opacity:1;color:var(--red);background:var(--bg);}
   .popbtn{width:100%;padding:9px;border-radius:11px;background:var(--panel2);font-weight:700;
-          font-size:13px;color:var(--sub);margin-top:6px;transition:.14s;}
+          font-size:13px;color:var(--sub);margin-top:6px;transition:.14s;
+          border:1px solid var(--line-soft);}
   .popbtn:hover{background:var(--blue);color:#fff;}
   .popbtn.danger{color:var(--red);margin-top:10px;border-top:1px solid var(--line);
                  border-radius:0 0 11px 11px;padding-top:12px;}
@@ -725,6 +748,54 @@
     <button class="mbtn"    data-mo="present" data-tip="Record — present karo aur video banao">⏺️ Record</button>
   </div>
   <button class="tbtn" data-pri="1" data-ico="📚" id="boardsBtn">📚 Boards ▾</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
   <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
   <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
   <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
