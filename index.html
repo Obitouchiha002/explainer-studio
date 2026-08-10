@@ -435,6 +435,22 @@
                        50%,100%{transform:scale(1)}}
   @keyframes pvNone{0%,100%{opacity:1}}
 
+  /* ---------------- START PANEL ---------------- */
+  .startp{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:46;display:none;
+    width:min(560px,calc(100vw - 40px));padding:26px;border-radius:22px;
+    background:var(--panel-solid);border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.28);}
+  .startp.on{display:block;}
+  .startp h3{font-family:'Baloo 2',system-ui,sans-serif;font-size:22px;margin-bottom:16px;}
+  .srow2{display:flex;flex-direction:column;gap:9px;}
+  .srow2 button{text-align:left;padding:14px 16px;border-radius:14px;background:var(--panel2);
+    border:1.5px solid var(--line);transition:.13s;}
+  .srow2 button:hover{border-color:var(--blue);transform:translateY(-1px);}
+  .srow2 b{display:block;font-size:15px;font-weight:800;margin-bottom:3px;}
+  .srow2 span{display:block;font-size:12.5px;color:var(--muted);line-height:1.45;}
+  .startp .skip{display:block;margin:14px auto 0;font-size:12.5px;color:var(--muted);
+    padding:6px 12px;border-radius:9px;}
+  .startp .skip:hover{background:var(--panel2);color:var(--ink);}
+
   /* ---------------- MODES ---------------- */
   .modes{display:flex;gap:3px;padding:3px;border-radius:12px;background:var(--panel2);
          border:1px solid var(--line);flex:0 0 auto;}
@@ -679,6 +695,19 @@
   <div class="bbar"><i></i></div>
 </div>
 
+<div class="startp" id="startp">
+  <h3>Kya karna hai?</h3>
+  <div class="srow2">
+    <button data-start="script"><b>✍️ Meri script se board banao</b>
+      <span>Script paste karo — cards, steps, notes sab apne aap</span></button>
+    <button data-start="blank"><b>✏️ Khaali board pe likhna hai</b>
+      <span>Chalk aur pen ke saath saada board</span></button>
+    <button data-start="demo"><b>👀 Pehle demo dekh loon</b>
+      <span>Bana hua example — usi ko badal kar seekh lo</span></button>
+  </div>
+  <button class="skip" id="startSkip">Baad me</button>
+</div>
+
 <div class="hint" id="hint">
   <h2>Khaali board — jitna chaaho utna bada 🎨</h2>
   <p>Neeche se koi tool uthao aur shuru karo. Wheel se pan, Ctrl+wheel se zoom.</p>
@@ -692,10 +721,42 @@
   <div class="modes" id="modes">
     <button class="mbtn on" data-mo="write"   data-tip="Write — likhne aur samjhane ke tools">✏️ Write</button>
     <button class="mbtn"    data-mo="build"   data-tip="Build — cards, frames, mockups, gallery">🧱 Build</button>
-    <button class="mbtn"    data-mo="plan"    data-tip="Plan — script, AI, steps, notes">🗺️ Plan</button>
-    <button class="mbtn"    data-mo="present" data-tip="Present — record aur dikhane ke tools">▶️ Present</button>
+    <button class="mbtn"    data-mo="plan"    data-tip="Script — apni script se board banao, steps aur notes">✍️ Script</button>
+    <button class="mbtn"    data-mo="present" data-tip="Record — present karo aur video banao">⏺️ Record</button>
   </div>
   <button class="tbtn" data-pri="1" data-ico="📚" id="boardsBtn">📚 Boards ▾</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
   <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
   <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
   <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
@@ -1886,7 +1947,7 @@ async function loadAll(){
   await migrateBoards();
   const wanted = boards.find(b => b.id === active) || boards[0];
   if(wanted) await openBoard(wanted.id, true);
-  if(!doc) newBoard('Board 1', true);
+  if(!doc) newBoard('Demo board', true);
 }
 
 /* Board file kabhi adhoori ya kharab mil sakti hai (storage bhar gaya, sync
@@ -7610,6 +7671,37 @@ async function importKeys(file){
   }
 }
 
+/* ============================ START PANEL ============================
+   Pehli baar app khulne par ek naya banda demo board dekhta hai aur samajh hi
+   nahi paata ki shuru kahan se karein. Ye ek baar poochta hai — teen seedhe
+   raste — aur phir kabhi nahi aata. */
+const LS_SEEN = 'tbv_studio_seen';
+function openStart(on){
+  const show = on === undefined ? !$('startp').classList.contains('on') : on;
+  $('startp').classList.toggle('on', show);
+}
+function doneStart(){
+  try{ localStorage.setItem(LS_SEEN, '1'); }catch(err){}
+  openStart(false);
+}
+document.querySelectorAll('[data-start]').forEach(b => b.addEventListener('click', () => {
+  const w = b.dataset.start;
+  doneStart();
+  if(w === 'script'){ setMode('plan'); toggleScript(true); }
+  else if(w === 'blank'){
+    setMode('write');
+    newBoard('Mera board', true);
+    setSurface('green');
+    setTool('chalk');
+    toast('Khaali board — chalk se likho');
+  } else {
+    setMode('write');
+    fitTo(objects(), true);
+    toast('Ye ek example hai — ise badal kar dekho, ya Boards ▾ se naya banao');
+  }
+}));
+$('startSkip').addEventListener('click', doneStart);
+
 /* ============================ SCRATCH BOARD ============================
    Beech me kuch samjhana ho — ek chhoti si cheez likh kar dikhani ho — to
    poora board ganda karne ki zaroorat nahi. Ek khaali board turant khulta hai,
@@ -7679,8 +7771,10 @@ function toolInMode(t, m){
    hain jo har video me lagti hain — baaki chhupti nahi, hat jaati hain. Ek
    click me sab wapas. Naye user ke liye default Simple hi hai. */
 const SIMPLE_TOOLS = ['select','hand','pen','chalk','eraser','duster','text','card','image'];
+// NOTE: helpBtn yahan kabhi mat daalna. Naye user ko sabse zyada wahi chahiye —
+// pehle wo Simple me chhupa hua tha, jo bilkul ulta tha.
 const SIMPLE_HIDE = ['gridBtn','themeBtn','frameBtn','exportBtn','snapBtn','recMode',
-                     'layersBtn','helpBtn','scriptPanelBtn'];
+                     'layersBtn','scriptPanelBtn'];
 let simpleUI = true;
 let uiMode = 'write';
 
@@ -7960,6 +8054,9 @@ function renderSettings(){
       <div class="sright"><button class="ib" id="sGrid" style="flex:0 0 auto">${showGrid?'On':'Off'}</button></div></div>
     <div class="srow"><div class="sleft"><b>Snapping</b><span>Drag karte waqt align guides.</span></div>
       <div class="sright"><button class="ib" id="sSnap" style="flex:0 0 auto">${snapOn?'On':'Off'}</button></div></div>
+    <div class="srow"><div class="sleft"><b>Shuruaat wala panel</b>
+      <span>Wo teen sawaal wala panel jo pehli baar aata hai.</span></div>
+      <div class="sright"><button class="ib" id="sStart" style="flex:0 0 auto">Dobara dikhao</button></div></div>
     <div class="srow"><div class="sleft"><b>Toolbar</b>
       <span>Simple me sirf roz kaam aane wale tools rehte hain. All tools sab kuch khol deta hai.</span></div>
       <div class="sright"><button class="ib" id="sSimple" style="flex:0 0 auto">${simpleUI?'Simple':'All tools'}</button></div></div>
@@ -8008,6 +8105,7 @@ function renderSettings(){
   on('sImpKeys', () => $('keyPick').click());
   on('sGrid', () => { toggleGrid(); renderSettings(); });
   on('sSnap', () => { snapOn = !snapOn; save(); renderSettings(); toast(snapOn?'Snapping on':'Snapping off'); });
+  on('sStart', () => { openSettings(false); openStart(true); });
   on('sSimple', () => { setSimple(!simpleUI); renderSettings(); });
   const su = $('sSurf'); if(su) su.addEventListener('change', () => { setSurface(su.value); renderSettings(); });
   on('sShape', () => { shapeSnap = !shapeSnap; save(); renderSettings();
@@ -8779,7 +8877,7 @@ let bootDone = false;                        // tests aur boot-time races ke liy
   buildStickerPop();
   requestAnimationFrame(loop);               // canvas turant zinda, doc baad me
   try{ await loadAll(); }                    // theme + brush settings bhi yahin se
-  catch(err){ if(!doc) newBoard('Board 1', true); }
+  catch(err){ if(!doc) newBoard('Demo board', true); }
   applyTheme();
   buildSwatches();                           // settings ke baad, taaki sahi swatch on ho
   $('sizeRange').value = brushSize; $('sizeVal').textContent = brushSize;
@@ -8801,6 +8899,9 @@ let bootDone = false;                        // tests aur boot-time races ke liy
   if(document.fonts?.ready) document.fonts.ready.then(checkFonts);
   else checkFonts();
   bootIntro();
+  let seen = false;
+  try{ seen = localStorage.getItem(LS_SEEN) === '1'; }catch(err){}
+  if(!seen) setTimeout(() => openStart(true), 1400);   // boot animation ke baad
   bootDone = true;
 })();
 

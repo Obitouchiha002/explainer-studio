@@ -415,6 +415,41 @@ T('clear board: poochta hai, undo sab laata hai', () => {
   if(!S.doc.views[1] || S.doc.stepNotes[1] !== 'kuch') throw new Error('views/notes wapas nahi aaye');
 });
 
+/* --------------------- naye user ka pehla anubhav --------------------- */
+T('Help Simple mode me kabhi na chhupe', () => {
+  if(/'helpBtn'/.test(H.html.match(/const SIMPLE_HIDE = \[[^\]]*\]/)[0]))
+    throw new Error('Help Simple me chhupa hua hai — naye user ko wahi sabse zyada chahiye');
+});
+
+T('mode ke naam batate hain ki wahan hota kya hai', () => {
+  const modes = [...H.html.matchAll(/data-mo="(write|build|plan|present)"[^>]*>([^<]+)</g)]
+    .map(m => ({ k:m[1], label:m[2].trim() }));
+  const by = k => (modes.find(m => m.k === k) || {}).label || '';
+  if(!/Script/i.test(by('plan')))
+    throw new Error('"Plan" me script hai par naam se pata nahi chalta: ' + by('plan'));
+  if(!/Record/i.test(by('present')))
+    throw new Error('"Present" me record hai par naam se pata nahi chalta: ' + by('present'));
+});
+
+T('pehli baar shuruaat wala panel aata hai, dobara nahi', () => {
+  delete store['tbv_studio_seen'];
+  S.openStart(true);
+  if(!elById.startp.classList.contains('on')) throw new Error('panel khula hi nahi');
+  const opts = [...elById.startp.innerHTML.matchAll(/data-start="(\w+)"/g)].map(m => m[1]);
+  // markup se check — stub innerHTML padhta nahi
+  const fromHtml = [...H.html.matchAll(/data-start="(\w+)"/g)].map(m => m[1]);
+  for(const k of ['script','blank','demo'])
+    if(!fromHtml.includes(k)) throw new Error(k + ' wala option nahi hai');
+  S.doneStart();
+  if(elById.startp.classList.contains('on')) throw new Error('band nahi hua');
+  if(store['tbv_studio_seen'] !== '1') throw new Error('yaad nahi rakha — har baar aayega');
+});
+
+T('demo board ka naam saaf batata hai ki demo hai', () => {
+  if(!/newBoard\('Demo board'/.test(H.html))
+    throw new Error('pehla board "Board 1" naam se banta hai — pata hi nahi chalta ki sample hai');
+});
+
 /* ------------------------------ modes ------------------------------ */
 T('Simple mode: sirf roz ke tools, aur ek click me sab wapas', () => {
   S.setSimple(true);

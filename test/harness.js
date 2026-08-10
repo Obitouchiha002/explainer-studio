@@ -46,6 +46,7 @@ const BRIDGE = `
   get tool(){return tool}, get uiMode(){return uiMode},
   get MODE_TOOLS(){return MODE_TOOLS},
   get simpleUI(){return simpleUI},
+  get openStart(){return openStart}, get doneStart(){return doneStart},
   get scratchFrom(){return scratchFrom},
   get brushColor(){return brushColor}, set brushColor(v){brushColor=v},
   get shapeSnap(){return shapeSnap}, set shapeSnap(v){shapeSnap=v},
