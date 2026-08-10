@@ -415,6 +415,50 @@ T('clear board: poochta hai, undo sab laata hai', () => {
   if(!S.doc.views[1] || S.doc.stepNotes[1] !== 'kuch') throw new Error('views/notes wapas nahi aaye');
 });
 
+/* ------------------------------ modes ------------------------------ */
+T('har mode me sirf usi kaam ke tools', () => {
+  const off = () => [...H.html.matchAll(/data-tool="(\w+)"[^>]*data-mo="([^"]+)"/g)]
+    .map(m => ({ tool:m[1], modes:m[2].split(' ') }));
+  const all = off();
+  if(all.length < 15) throw new Error('tools pe mode tag hi nahi lage: ' + all.length);
+
+  const inMode = m => all.filter(t => t.modes.includes(m)).map(t => t.tool);
+  const write = inMode('write'), build = inMode('build'), plan = inMode('plan');
+
+  for(const t of ['pen','chalk','duster','eraser'])
+    if(!write.includes(t)) throw new Error(t + ' Write me hona chahiye');
+  for(const t of ['chalk','duster','pencil'])
+    if(build.includes(t)) throw new Error(t + ' Build me nahi hona chahiye');
+  for(const t of ['frame','link','card','code'])
+    if(!build.includes(t)) throw new Error(t + ' Build me hona chahiye');
+  if(write.includes('frame')) throw new Error('frame Write me aa gaya — wahan bekaar hai');
+  for(const m of ['write','build','plan','present'])
+    if(!inMode(m).includes('select')) throw new Error(m + ' me select hi nahi');
+});
+
+T('mode badalne pe galat tool nahi rehta', () => {
+  S.setMode('write'); S.setTool('chalk');
+  S.setMode('build');
+  if(S.tool === 'chalk') throw new Error('Build me aakar bhi chalk hi chala raha hai');
+  if(S.toolInMode('chalk','build')) throw new Error('chalk Build me allowed hai');
+  if(S.toolInMode('frame','write')) throw new Error('frame Write me allowed hai');
+  S.setMode('write');
+});
+
+T('top bar buttons bhi mode ke hisaab se', () => {
+  const bar = [...H.html.matchAll(/data-mo="([^"]+)" id="(\w+)"/g)].map(m => ({ id:m[2], modes:m[1].split(' ') }));
+  const find = id => bar.find(b => b.id === id);
+  if(!find('galBtn') || !find('galBtn').modes.includes('build')) throw new Error('Gallery Build me nahi');
+  if(find('galBtn').modes.includes('write')) throw new Error('Gallery Write me bhi aa gayi');
+  if(!find('recBtn') || !find('recBtn').modes.includes('present')) throw new Error('Record Present me nahi');
+  if(!find('surfBtn').modes.includes('write')) throw new Error('Board surface Write me nahi');
+});
+
+T('scratch board: khulta hai, aur wapas wahin chhodta hai', async () => {
+  // sync test — sirf naam aur state check
+  if(typeof S.toggleScratch !== 'function') throw new Error('scratch hai hi nahi');
+});
+
 /* ------------------------- board surfaces ------------------------- */
 T('surfaces: har board ka apna rang, ink aur grid', () => {
   const seen = new Set();
@@ -564,6 +608,7 @@ T('hover pe cursor badalta hai', () => {
 });
 
 T('khaali jagah 2x click = naya text', () => {
+  S.setTool('select');                        // pen chalu ho to likhna hi chahiye, text nahi
   S.doc.objects = [];
   const dbl = listeners.filter(l => l.type === 'dblclick');
   if(!dbl.length) throw new Error('dblclick handler nahi');
@@ -738,6 +783,29 @@ T('backup nudge sirf ek baar, aur backup ke baad reset', () => {
     try{ await c.subtle.decrypt({ name:'AES-GCM', iv }, await derive('wrong', salt), ct); opened = true; }
     catch(e){}
     if(opened) throw new Error('galat password se bhi khul gayi');
+  });
+
+  await T2('scratch board: jaao, likho, wapas aao', async () => {
+    S.setMode('write');
+    const home = S.doc.id;
+    S.doc.objects = [];
+    S.objects().push(S.mkCard(0,0,'✨','ghar ka kaam','x',1));
+    S.save();
+
+    await S.toggleScratch();
+    if(S.doc.id === home) throw new Error('scratch board khula hi nahi');
+    if(S.doc.name !== '⚡ Scratch') throw new Error('galat board: ' + S.doc.name);
+    if(S.objects().length) throw new Error('scratch khaali nahi hai');
+
+    await S.toggleScratch();
+    if(S.doc.id !== home) throw new Error('wapas apne board pe nahi aaya');
+    if(!S.objects().some(o => o.title === 'ghar ka kaam')) throw new Error('purana kaam kho gaya');
+
+    // dobara jaane par wahi scratch board mile, naya na bane
+    const before = S.boards.length;
+    await S.toggleScratch();
+    if(S.boards.length !== before) throw new Error('har baar naya scratch bana raha hai');
+    await S.toggleScratch();
   });
 
   await T2('flush ke baad board sach me store me', async () => {

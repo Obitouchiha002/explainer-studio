@@ -435,6 +435,18 @@
                        50%,100%{transform:scale(1)}}
   @keyframes pvNone{0%,100%{opacity:1}}
 
+  /* ---------------- MODES ---------------- */
+  .modes{display:flex;gap:3px;padding:3px;border-radius:12px;background:var(--panel2);
+         border:1px solid var(--line);flex:0 0 auto;}
+  .mbtn{padding:6px 11px;border-radius:9px;font-size:13px;font-weight:800;color:var(--muted);
+        white-space:nowrap;transition:.12s;}
+  .mbtn:hover{color:var(--ink);}
+  .mbtn.on{background:var(--panel-solid);color:var(--blue);box-shadow:var(--shadow-sm);}
+  .top.tight .mbtn{font-size:0;padding:6px 9px;}
+  .top.tight .mbtn::before{content:attr(data-ico);font-size:14px;}
+  /* mode ke bahar wale tools bilkul hat jaate hain — dikhein hi nahi */
+  .tool.mo-off,.tbtn.mo-off,.divider.mo-off{display:none !important;}
+
   /* ---------------- SAVE INDICATOR ---------------- */
   .savest{font-size:11.5px;font-weight:700;color:var(--muted);white-space:nowrap;
           padding:0 4px;min-width:60px;text-align:right;transition:color .2s;}
@@ -677,7 +689,93 @@
   <div class="brand">TECH BY <span class="y">VANSH</span></div>
   <div class="divider"></div>
   <input class="bname" id="boardName" value="Board 1" spellcheck="false">
+  <div class="modes" id="modes">
+    <button class="mbtn on" data-mo="write"   data-tip="Write — likhne aur samjhane ke tools">✏️ Write</button>
+    <button class="mbtn"    data-mo="build"   data-tip="Build — cards, frames, mockups, gallery">🧱 Build</button>
+    <button class="mbtn"    data-mo="plan"    data-tip="Plan — script, AI, steps, notes">🗺️ Plan</button>
+    <button class="mbtn"    data-mo="present" data-tip="Present — record aur dikhane ke tools">▶️ Present</button>
+  </div>
   <button class="tbtn" data-pri="1" data-ico="📚" id="boardsBtn">📚 Boards ▾</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
   <button class="tbtn blue" data-pri="1" data-ico="🧱" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
   <button class="tbtn" data-pri="1" data-ico="✍️" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
   <button class="tbtn" data-pri="1" data-ico="🗺️" id="flowBtn">🗺️ Flow</button>
@@ -857,40 +955,41 @@
   <button class="tbtn blue" data-pri="3" data-ico="⬇︎" id="installBtn" title="Install — app ki tarah lag jayega, offline bhi chalega" style="display:none">⬇︎ Install</button>
   <button class="tbtn" data-pri="2" data-ico="↻" id="updBtn" title="Naya version aa gaya — dabao to lag jayega" style="display:none">↻ Update</button>
   <button class="tbtn" data-pri="4" data-ico="?" id="helpBtn" title="Shortcuts (?)">?</button>
-  <button class="tbtn" data-pri="2" data-ico="🎨" id="surfBtn" title="Board — whiteboard, hara board, blackboard, copy">🎨 Board</button>
-  <button class="tbtn" data-pri="4" data-ico="⠿" id="gridBtn" title="Dot grid on / off (D)">⠿</button>
+  <button class="tbtn" data-pri="1" data-ico="⚡" id="scratchBtn" title="Scratch — ek khaali board, turant likhne ke liye (N). Wapas aane pe kaam wahin milega.">⚡ Scratch</button>
+  <button class="tbtn" data-pri="2" data-ico="🎨" data-mo="write" id="surfBtn" title="Board — whiteboard, hara board, blackboard, copy">🎨 Board</button>
+  <button class="tbtn" data-pri="4" data-ico="⠿" data-mo="write build" id="gridBtn" title="Dot grid on / off (D)">⠿</button>
   <button class="tbtn" data-pri="4" data-ico="🌙" id="themeBtn" title="Light / Dark theme">🌙</button>
-  <button class="tbtn" data-pri="3" data-ico="🎬" id="frameBtn" title="Video safe frame: off → 16:9 → 9:16 (G)">🎬 off</button>
-  <button class="tbtn" data-pri="2" data-ico="⬇︎" id="exportBtn" title="PNG export · Shift+click = transparent background">⬇︎ PNG</button>
+  <button class="tbtn" data-pri="3" data-ico="🎬" data-mo="present build" id="frameBtn" title="Video safe frame: off → 16:9 → 9:16 (G)">🎬 off</button>
+  <button class="tbtn" data-pri="2" data-ico="⬇︎" data-mo="build present" id="exportBtn" title="PNG export · Shift+click = transparent background">⬇︎ PNG</button>
   <button class="tbtn" id="ovfBtn" data-tip="Aur — jo cheezein jagah na hone se chhup gayi" style="display:none">⋯</button>
   <button class="tbtn solid" id="presentBtn">▶ Present</button>
 </div>
 
 <!-- ======= DOCK ======= -->
 <div class="dock" id="dock">
-  <button class="tool on" data-tool="select" title="Select — V · cheezein chuno aur khisakao">⬚</button>
-  <button class="tool" data-tool="hand" title="Hand — H · board ko kheench kar ghumao">✋</button>
+  <button class="tool on" data-tool="select" data-mo="write build plan present" title="Select — V · cheezein chuno aur khisakao">⬚</button>
+  <button class="tool" data-tool="hand" data-mo="write build plan present" title="Hand — H · board ko kheench kar ghumao">✋</button>
   <div class="divider"></div>
-  <button class="tool" data-tool="pen" title="Pen — P · saaf patli line">🖊️</button>
-  <button class="tool" data-tool="pencil" title="Pencil — B · daane-daar, sketch jaisi line">✏️</button>
-  <button class="tool" data-tool="marker" title="Marker — M · moti bold line">🖍️</button>
-  <button class="tool" data-tool="highlighter" title="Highlighter — Y · paar-darshi, upar se lagane ke liye">🟡</button>
-  <button class="tool" data-tool="chalk" title="Chalk — X · board wali kharoch waali likhawat">🖌️</button>
-  <button class="tool" data-tool="eraser" title="Eraser — E · jispe kheencho wo mit jaata hai">🧽</button>
-  <button class="tool" data-tool="duster" title="Duster — D · ek jhatke me bada hissa saaf">🧹</button>
+  <button class="tool" data-tool="pen" data-mo="write present" title="Pen — P · saaf patli line">🖊️</button>
+  <button class="tool" data-tool="pencil" data-mo="write" title="Pencil — B · daane-daar, sketch jaisi line">✏️</button>
+  <button class="tool" data-tool="marker" data-mo="write present" title="Marker — M · moti bold line">🖍️</button>
+  <button class="tool" data-tool="highlighter" data-mo="write present" title="Highlighter — Y · paar-darshi, upar se lagane ke liye">🟡</button>
+  <button class="tool" data-tool="chalk" data-mo="write present" title="Chalk — X · board wali kharoch waali likhawat">🖌️</button>
+  <button class="tool" data-tool="eraser" data-mo="write present" title="Eraser — E · jispe kheencho wo mit jaata hai">🧽</button>
+  <button class="tool" data-tool="duster" data-mo="write present" title="Duster — D · ek jhatke me bada hissa saaf">🧹</button>
   <div class="divider"></div>
-  <button class="tool" data-tool="text" title="Text — T · heading ya koi bhi likhawat">🅣</button>
-  <button class="tool" data-tool="note" title="Sticky note — S · chhota rangeen note">🗒️</button>
-  <button class="tool" data-tool="card" title="Step card — C · icon + title + ek line">🧩</button>
-  <button class="tool" data-tool="code" title="Code / prompt — K · terminal jaisa block, type-on ke saath">⌨️</button>
-  <button class="tool" data-tool="rect" title="Rectangle — R · box ya highlight">▭</button>
-  <button class="tool" data-tool="ellipse" title="Ellipse — O · gol ghera">◯</button>
-  <button class="tool" data-tool="arrow" title="Arrow — A · kisi cheez ki taraf ishaara">➜</button>
-  <button class="tool" data-tool="link" title="Connector — J · pehle ek card pe tap, phir doosre pe">🔗</button>
-  <button class="tool" data-tool="frame" title="Frame — F · slide ki hadd, ya image ka daayra">🖼</button>
+  <button class="tool" data-tool="text" data-mo="write build plan present" title="Text — T · heading ya koi bhi likhawat">🅣</button>
+  <button class="tool" data-tool="note" data-mo="write build plan" title="Sticky note — S · chhota rangeen note">🗒️</button>
+  <button class="tool" data-tool="card" data-mo="build plan" title="Step card — C · icon + title + ek line">🧩</button>
+  <button class="tool" data-tool="code" data-mo="build plan" title="Code / prompt — K · terminal jaisa block, type-on ke saath">⌨️</button>
+  <button class="tool" data-tool="rect" data-mo="write build present" title="Rectangle — R · box ya highlight">▭</button>
+  <button class="tool" data-tool="ellipse" data-mo="write build present" title="Ellipse — O · gol ghera">◯</button>
+  <button class="tool" data-tool="arrow" data-mo="write build present" title="Arrow — A · kisi cheez ki taraf ishaara">➜</button>
+  <button class="tool" data-tool="link" data-mo="build plan" title="Connector — J · pehle ek card pe tap, phir doosre pe">🔗</button>
+  <button class="tool" data-tool="frame" data-mo="build" title="Frame — F · slide ki hadd, ya image ka daayra">🖼</button>
   <div class="divider"></div>
-  <button class="tool" id="stickerBtn" title="Stickers — emoji ka poora sangrah">😀</button>
-  <button class="tool" id="imageBtn" title="Image — apne computer se tasveer daalo">🖼️</button>
+  <button class="tool" data-mo="write build" id="stickerBtn" title="Stickers — emoji ka poora sangrah">😀</button>
+  <button class="tool" data-mo="write build present" id="imageBtn" title="Image — apne computer se tasveer daalo">🖼️</button>
 </div>
 
 <!-- brush settings -->
@@ -1720,9 +1819,9 @@ function save(){
    pending save ko turant nikaal dete hain. Warna aakhri 320ms ke andar ka
    kaam ud sakta tha. */
 function flushSave(){
-  if(!saveTimer) return;
+  if(!saveTimer) return Promise.resolve();
   clearTimeout(saveTimer); saveTimer = null;
-  doSave();
+  return doSave();                             // caller chahe to intezaar kar sake
 }
 window.addEventListener('pagehide', flushSave);
 window.addEventListener('beforeunload', flushSave);
@@ -1778,6 +1877,9 @@ function sanitizeDoc(d, silent){
 }
 
 async function openBoard(id, silent){
+  // Save 320ms debounced hai. Board turant badla to aakhri kuch second ka kaam
+  // bina likhe reh jaata tha — Scratch button ne yahi pakda.
+  await flushSave();                           // purana board pakka likh jaye
   const loaded = await storeGet(id);
   if(!loaded){ if(!silent) toast('Board not found'); return; }
   doc = sanitizeDoc(loaded, silent);
@@ -1790,9 +1892,13 @@ async function openBoard(id, silent){
   mode = null; livePath = null; marquee = null; snapGuides = [];
   $('boardName').value = doc.name;
   updateHistBtns(); refreshInspector(); renderBoards(); requestDraw();
+  updateScratchBtn();
 }
 
 function newBoard(name, silent){
+  // openBoard ki tarah yahan bhi pehle pending save nikaalo — naya board banate
+  // hi purane ka aakhri kaam bina likhe reh jaata tha.
+  flushSave();
   const id = 'b' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
   doc = { id, name:name || ('Board ' + (boards.length+1)), objects:[], views:{}, stepNotes:{},
           camera:{x:0,y:0,z:1} };
@@ -7334,6 +7440,10 @@ document.addEventListener('keydown', e => {
     return;
   }
   if(typing) return;
+  if(e.key === 'F1'){ e.preventDefault(); setMode('write'); return; }
+  if(e.key === 'F2'){ e.preventDefault(); setMode('build'); return; }
+  if(e.key === 'F3'){ e.preventDefault(); setMode('plan'); return; }
+  if(e.key === 'F4'){ e.preventDefault(); setMode('present'); return; }
   if(e.key === 'F5'){ e.preventDefault(); enterPresent(); return; }
   if(e.key === 'Escape' && cancelCountdown()) return;
   if(e.key === '?' || (e.shiftKey && e.key === '/')){ e.preventDefault(); toggleHelp(); return; }
@@ -7381,6 +7491,7 @@ document.addEventListener('keydown', e => {
   if(k === 'l'){ openLayers(); return; }
   if(k === 'g'){ toggleFrame(); return; }
   if(k === 'd'){ setTool('duster'); return; }
+  if(k === 'n'){ toggleScratch(); return; }
   if(TOOLKEYS[k]) setTool(TOOLKEYS[k]);
   // arrow-key nudge
   if(sel.length && e.key.startsWith('Arrow')){
@@ -7463,6 +7574,105 @@ async function importKeys(file){
   }
 }
 
+/* ============================ SCRATCH BOARD ============================
+   Beech me kuch samjhana ho — ek chhoti si cheez likh kar dikhani ho — to
+   poora board ganda karne ki zaroorat nahi. Ek khaali board turant khulta hai,
+   likho, aur wahin wapas jahan the. Board delete nahi hota; agli baar wahi
+   scratch board dobara khulta hai (chahe to duster se saaf kar do). */
+let scratchFrom = null;
+const SCRATCH_NAME = '⚡ Scratch';
+
+async function toggleScratch(){
+  if(scratchFrom){                             // wapas apne kaam pe
+    const back = scratchFrom;
+    scratchFrom = null;
+    updateScratchBtn();
+    await openBoard(back);
+    toast('Wapas aa gaye');
+    return;
+  }
+  const here = doc && doc.id;
+  let row = boards.find(b => b.name === SCRATCH_NAME);
+  if(row) await openBoard(row.id);
+  else {
+    newBoard(SCRATCH_NAME, true);
+    const me = boards.find(b => b.id === doc.id);
+    if(me){ me.part = 999; }                   // playlist ke aakhir me, raste se hat kar
+    setSurface(chalkBoard() ? surface : 'green');
+    save();
+  }
+  scratchFrom = here;
+  updateScratchBtn();
+  if(uiMode !== 'write') setMode('write');
+  toast('Scratch board — likho, phir wahi button dabao wapas jaane ke liye');
+}
+function updateScratchBtn(){
+  const b = $('scratchBtn');
+  if(!b) return;
+  b.classList.toggle('blue', !!scratchFrom);
+  b.textContent = scratchFrom ? '← Back' : '⚡ Scratch';
+  b.dataset.ico = scratchFrom ? '←' : '⚡';
+}
+$('scratchBtn').addEventListener('click', toggleScratch);
+
+/* ============================== MODES ==============================
+   Sab kuch ek saath dikhne se naya banda ghabra jaata hai, aur kaam ke waqt
+   aankh bhatakti hai. Isliye chaar hisse — har mode me sirf usi kaam ke tools:
+     ✏️ Write   likhna, chalk, duster, shapes — board wala kaam
+     🧱 Build   cards, frames, mockups, gallery, layers
+     🗺️ Plan    script, AI, steps, notes
+     ▶️ Present record, safe frame, script panel
+   Jo cheez mode me nahi hai wo chhupti nahi — hat jaati hai, taaki dikhe hi na. */
+const MODE_TOOL = { write:'pen', build:'select', plan:'select', present:'select' };
+/* Kaunsa tool kis mode me — markup se nahi, yahin se. DOM na mile ya markup
+   badal jaye to bhi ye sach rehta hai. */
+const MODE_TOOLS = {
+  write:  ['select','hand','pen','pencil','marker','highlighter','chalk','eraser','duster',
+           'text','note','rect','ellipse','arrow'],
+  build:  ['select','hand','text','note','card','code','rect','ellipse','arrow','link','frame'],
+  plan:   ['select','hand','text','note','card','code','link'],
+  present:['select','hand','pen','marker','highlighter','chalk','eraser','duster',
+           'text','rect','ellipse','arrow']
+};
+function toolInMode(t, m){ return (MODE_TOOLS[m] || []).includes(t); }
+let uiMode = 'write';
+
+function applyMode(){
+  for(const el of document.querySelectorAll('[data-mo]')){
+    if(el.classList.contains('mbtn')) continue;          // switcher khud hamesha
+    el.classList.toggle('mo-off', !el.dataset.mo.split(' ').includes(uiMode));
+  }
+  for(const b of document.querySelectorAll('.mbtn'))
+    b.classList.toggle('on', b.dataset.mo === uiMode);
+
+  // dock ke beech ke dividers agar dono taraf kuch na bache to hata do
+  const dock = $('dock');
+  if(dock){
+    const kids = [...dock.children];
+    kids.forEach((el, i) => {
+      if(!el.classList.contains('divider')) return;
+      const before = kids.slice(0, i).some(k => k.classList.contains('tool') && !k.classList.contains('mo-off'));
+      const after  = kids.slice(i+1).some(k => k.classList.contains('tool') && !k.classList.contains('mo-off'));
+      el.classList.toggle('mo-off', !(before && after));
+    });
+  }
+  // agar abhi wala tool is mode me hai hi nahi to us mode ka default le lo
+  if(!toolInMode(tool, uiMode)) setTool(MODE_TOOL[uiMode] || 'select');
+  fitTopBar();
+  requestDraw();
+}
+function setMode(m){
+  if(!MODE_TOOL[m]) return;
+  uiMode = m;
+  applyMode();
+  try{ localStorage.setItem('tbv_studio_mode', m); }catch(err){}
+  // har mode apna zaroori panel khud khol/band kar leta hai
+  if(m !== 'build'){ $('galp').classList.remove('on'); $('layp').classList.remove('on'); }
+  if(m !== 'plan')  $('flowp').classList.remove('on');
+}
+document.querySelectorAll('.mbtn').forEach(b =>
+  b.addEventListener('click', () => setMode(b.dataset.mo)));
+
 /* ==================== RESPONSIVE TOP BAR ====================
    Buttons badhte gaye aur bar chhoti screen pe kat-ne lagi — Present button tak
    gayab ho jaata tha. Ab bar khud naapti hai: pehle labels hata ke sirf icons
@@ -7491,6 +7701,7 @@ function fitTopBar(){
   // step 2: sabse kam zaroori (bada data-pri) pehle ⋯ me
   btn.style.display = '';
   const movable = [...bar.querySelectorAll('.tbtn[data-pri]')]
+    .filter(el => !el.classList.contains('mo-off'))      // chhupe hue ko mat ginо
     .sort((a, b) => (+b.dataset.pri) - (+a.dataset.pri));
   for(const el of movable){
     if(fits()) break;
@@ -8514,7 +8725,8 @@ let bootDone = false;                        // tests aur boot-time races ke liy
   applyGrid();
   updateZoomLabel(); updateHistBtns(); setTool('select');
   armTooltips();                               // sab native title hata do
-  fitTopBar();
+  try{ const m = localStorage.getItem('tbv_studio_mode'); if(MODE_TOOL[m]) uiMode = m; }catch(err){}
+  applyMode();
   setSaveState('ok');
   if(document.fonts?.ready) document.fonts.ready.then(checkFonts);
   else checkFonts();
