@@ -696,14 +696,75 @@
   @media(max-width:900px){
     .brand{display:none;} .top .divider:first-of-type{display:none;}
     .savest{display:none;}
-    .insp{width:calc(100vw - 32px);left:16px;right:16px;top:auto;bottom:140px;max-height:44vh;}
-    .flowp{width:calc(100vw - 32px);left:16px;right:16px;max-height:50vh;}
-    .dock{overflow-x:auto;}                    /* chhoti screen pe scroll wapas */
-    .tool{width:38px;height:38px;flex:0 0 38px;font-size:17px;}
+    .dock{overflow-x:auto;}
     .notes{max-width:calc(100vw - 40px);}
     .pctl{max-width:calc(100vw - 20px);overflow-x:auto;scrollbar-width:none;}
     .pctl .kh{display:none;}
     .helpbox{padding:18px;}
+  }
+
+  /* ==================== MOBILE ====================
+     Phone pe side me tairte panel angootha se pahunchte hi nahi. Isliye wahan
+     sab kuch neeche se aane wali sheet ban jaata hai. Aur touch targets CHHOTE
+     nahi, BADE hote hain — pehle yahan ulta tha (38px), ab 46px. */
+  @media(max-width:760px){
+    .top{height:54px;padding:0 8px;gap:6px;}
+    .top .divider{display:none;}
+    .modes{gap:2px;padding:2px;}
+    .mbtn{font-size:0;padding:8px 10px;}
+    .mbtn::before{content:attr(data-ico);font-size:16px;}
+    .bname{min-width:64px;max-width:120px;font-size:14px;}
+
+    /* saare panel -> neeche se sheet */
+    .insp,.galp,.layp,.flowp,.animp{
+      left:0 !important;right:0 !important;top:auto !important;bottom:0 !important;
+      width:100% !important;max-width:100% !important;max-height:70vh !important;
+      border-radius:22px 22px 0 0 !important;
+      border-left:0 !important;border-right:0 !important;border-bottom:0 !important;
+      padding-top:20px !important;
+      padding-bottom:calc(16px + env(safe-area-inset-bottom)) !important;
+      z-index:46;
+    }
+    /* sheet ke upar ki pakadne wali lakeer */
+    .insp::before,.galp::before,.layp::before,.flowp::before,.animp::before{
+      content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);
+      width:44px;height:4px;border-radius:4px;background:var(--line);}
+    body.sheet-open .dock,body.sheet-open .zoom,body.sheet-open .ctxbar{display:none !important;}
+
+    /* dock — angoothe ke liye bada, aur iPhone ki home line se upar */
+    .dock{bottom:calc(10px + env(safe-area-inset-bottom));gap:4px;padding:8px;
+          max-width:calc(100vw - 12px);scroll-snap-type:x proximity;}
+    .tool{width:46px;height:46px;flex:0 0 46px;font-size:21px;border-radius:14px;
+          scroll-snap-align:center;}
+    .tool:hover{transform:none;}               /* touch pe hover ka koi matlab nahi */
+    .brush{bottom:calc(76px + env(safe-area-inset-bottom));padding:10px 12px;}
+    .sw{width:30px;height:30px;}
+    .zoom{bottom:calc(12px + env(safe-area-inset-bottom));right:10px;}
+    .zoom button{width:38px;height:38px;}
+
+    .ctxbar{top:auto;bottom:calc(76px + env(safe-area-inset-bottom));
+            max-width:calc(100vw - 16px);}
+    .cbtn{height:40px;min-width:40px;}
+    .findbar{top:60px;width:calc(100vw - 24px);}
+    .findbar input{width:100%;}
+
+    /* modal poori screen — chhoti screen pe beech me box bekaar lagta hai */
+    .help{padding:0;align-items:flex-end;}
+    .helpbox{width:100%;max-height:92vh;border-radius:22px 22px 0 0;
+             padding-bottom:calc(20px + env(safe-area-inset-bottom));}
+    .hcols{grid-template-columns:1fr;}
+    .startp{width:100%;left:0;top:auto;bottom:0;transform:none;
+            border-radius:22px 22px 0 0;
+            padding-bottom:calc(26px + env(safe-area-inset-bottom));}
+    .spanel{left:0 !important;right:0 !important;width:100% !important;
+            top:auto !important;bottom:0 !important;height:60vh !important;
+            border-radius:22px 22px 0 0;}
+    .sgrip{display:none;}
+
+    .pctl{bottom:calc(14px + env(safe-area-inset-bottom));padding:8px;}
+    .pctl button{padding:9px 12px;}
+    .pdock{top:auto;bottom:calc(76px + env(safe-area-inset-bottom));}
+    .tipbox{display:none !important;}          /* touch pe hover hota hi nahi */
   }
 </style>
 </head>
@@ -742,12 +803,44 @@
   <div class="divider"></div>
   <input class="bname" id="boardName" value="Board 1" spellcheck="false">
   <div class="modes" id="modes">
-    <button class="mbtn on" data-mo="write"   data-tip="Write — likhne aur samjhane ke tools">✏️ Write</button>
-    <button class="mbtn"    data-mo="build"   data-tip="Build — cards, frames, mockups, gallery">🧱 Build</button>
-    <button class="mbtn"    data-mo="plan"    data-tip="Script — apni script se board banao, steps aur notes">✍️ Script</button>
-    <button class="mbtn"    data-mo="present" data-tip="Record — present karo aur video banao">⏺️ Record</button>
+    <button class="mbtn on" data-ico="✏️" data-mo="write"   data-tip="Write — likhne aur samjhane ke tools">✏️ Write</button>
+    <button class="mbtn"    data-ico="🧱" data-mo="build"   data-tip="Build — cards, frames, mockups, gallery">🧱 Build</button>
+    <button class="mbtn"    data-ico="✍️" data-mo="plan"    data-tip="Script — apni script se board banao, steps aur notes">✍️ Script</button>
+    <button class="mbtn"    data-ico="⏺️" data-mo="present" data-tip="Record — present karo aur video banao">⏺️ Record</button>
   </div>
   <button class="tbtn" data-pri="1" data-ico="📚" id="boardsBtn">📚 Boards ▾</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
   <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
   <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
   <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
@@ -4521,7 +4614,13 @@ document.addEventListener('dragleave', e => {
 
 /* ----------------------------- TOOLS UI ----------------------------- */
 function setTool(t){
+  const changed = tool !== t;
   tool = t;
+  if(changed && isMobile()){
+    const btn = document.querySelector('.tool[data-tool="' + t + '"]');
+    const tip = btn && (btn.dataset.tip || '');
+    if(tip) toast(tip.split(' · ')[0]);        // "Pen — P"
+  }
   pendingSticker = null;
   linkFrom = null; linkCursor = null;
   document.querySelectorAll('.tool[data-tool]').forEach(b => b.classList.toggle('on', b.dataset.tool === t));
@@ -7814,6 +7913,31 @@ function updateScratchBtn(){
 }
 $('scratchBtn').addEventListener('click', toggleScratch);
 
+/* ============================== MOBILE ==============================
+   Phone pe do cheezein alag hoti hain: hover hota hi nahi, aur panel neeche se
+   aate hain. Isliye tool chunne pe uska naam ek toast me bata dete hain (warna
+   naye user ko pata hi nahi chalega ki kaunsa tool hai), aur koi bhi sheet
+   khulte hi dock chhupa dete hain taaki dono aapas me na ladein. */
+function isMobile(){ return window.innerWidth <= 760; }
+
+const SHEETS = ['insp','galp','layp','flowp','animp'];
+function syncSheets(){
+  if(!isMobile()){ document.body.classList.remove('sheet-open'); return; }
+  const open = SHEETS.some(id => { const el = $(id); return el && el.classList.contains('on'); });
+  document.body.classList.toggle('sheet-open', open);
+}
+/* koi bhi panel khule/band ho to dock ka faisla dobara — har jagah call karne
+   ki jagah ek chhota observer */
+setInterval(syncSheets, 300);
+
+/* Phone pe pehli baar Simple hi theek hai — 18 tools angoothe se nahi chalte */
+function mobileDefaults(){
+  if(!isMobile()) return;
+  let seen = false;
+  try{ seen = localStorage.getItem('tbv_studio_simple') !== null; }catch(err){}
+  if(!seen) setSimple(true);
+}
+
 /* ============================== MODES ==============================
    Sab kuch ek saath dikhne se naya banda ghabra jaata hai, aur kaam ke waqt
    aankh bhatakti hai. Isliye chaar hisse — har mode me sirf usi kaam ke tools:
@@ -7954,7 +8078,7 @@ $('ovfBtn').addEventListener('click', e => {
   p.style.top = '62px';
   p.classList.add('on');
 });
-window.addEventListener('resize', () => { fitTopBar(); });
+window.addEventListener('resize', () => { fitTopBar(); syncSheets(); });
 
 /* ==================== RIGHT-CLICK MENU ====================
    Desktop pe mouse se kaam karna aasan ho — sab kuch panel dhoondhne ki jagah
@@ -8966,6 +9090,8 @@ let bootDone = false;                        // tests aur boot-time races ke liy
     const sp = localStorage.getItem('tbv_studio_simple'); if(sp !== null) simpleUI = sp === '1';
   }catch(err){}
   applyMode();
+  mobileDefaults();
+  syncSheets();
   setSaveState('ok');
   if(document.fonts?.ready) document.fonts.ready.then(checkFonts);
   else checkFonts();

@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "sync": "node test/sync.js",
-    "test": "node test/sync.js && node test/contrast.js && node test/tests.js && IDB=1 node test/tests.js",
+    "test": "node test/sync.js && node test/contrast.js && node test/mobile.js && node test/tests.js && IDB=1 node test/tests.js",
     "deploy": "npm test && git add -A && git commit -m \"update\" && git push && npx vercel --prod --yes"
   }
 }
