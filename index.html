@@ -680,8 +680,8 @@
 </div>
 
 <div class="hint" id="hint">
-  <h2>An empty canvas — as large as you need 🎨</h2>
-  <p>Pick a tool below and start. Two fingers or the wheel to pan, pinch to zoom.</p>
+  <h2>Khaali board — jitna chaaho utna bada 🎨</h2>
+  <p>Neeche se koi tool uthao aur shuru karo. Wheel se pan, Ctrl+wheel se zoom.</p>
 </div>
 
 <!-- ======= TOP BAR ======= -->
@@ -696,6 +696,38 @@
     <button class="mbtn"    data-mo="present" data-tip="Present — record aur dikhane ke tools">▶️ Present</button>
   </div>
   <button class="tbtn" data-pri="1" data-ico="📚" id="boardsBtn">📚 Boards ▾</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" data-mo="build plan" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" data-mo="present" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" data-mo="present" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" data-mo="present" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" data-mo="present" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
   <button class="tbtn blue" data-pri="1" data-ico="🧱" data-mo="build" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
   <button class="tbtn" data-pri="1" data-ico="✍️" data-mo="plan" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
   <button class="tbtn" data-pri="1" data-ico="🗺️" data-mo="plan present" id="flowBtn">🗺️ Flow</button>
@@ -955,6 +987,7 @@
   <button class="tbtn blue" data-pri="3" data-ico="⬇︎" id="installBtn" title="Install — app ki tarah lag jayega, offline bhi chalega" style="display:none">⬇︎ Install</button>
   <button class="tbtn" data-pri="2" data-ico="↻" id="updBtn" title="Naya version aa gaya — dabao to lag jayega" style="display:none">↻ Update</button>
   <button class="tbtn" data-pri="4" data-ico="?" id="helpBtn" title="Shortcuts (?)">?</button>
+  <button class="tbtn blue" data-pri="1" data-ico="◔" id="simpleBtn" title="Simple / All tools — Simple me sirf roz kaam aane wale tools rehte hain">◔ Simple</button>
   <button class="tbtn" data-pri="1" data-ico="⚡" id="scratchBtn" title="Scratch — ek khaali board, turant likhne ke liye (N). Wapas aane pe kaam wahin milega.">⚡ Scratch</button>
   <button class="tbtn" data-pri="2" data-ico="🎨" data-mo="write" id="surfBtn" title="Board — whiteboard, hara board, blackboard, copy">🎨 Board</button>
   <button class="tbtn" data-pri="4" data-ico="⠿" data-mo="write build" id="gridBtn" title="Dot grid on / off (D)">⠿</button>
@@ -1118,8 +1151,10 @@
     </div>
     <p class="aiwarn">Free key from <b style="color:var(--sub)">console.groq.com</b>. It's kept in this
        browser's local storage and goes straight to Groq — nowhere else.
-       <b>Don't share this HTML file once a key is saved</b>, the key travels with it.
-       Everything except the ✨ features works with no key and no internet.</p>
+       The key lives in this browser's storage — <b>it is never written into the HTML file</b>,
+       so sharing the file does not share your key. To move it to another computer use
+       Settings ⚙ → Export API keys (encrypted). Everything except the ✨ features works
+       with no key and no internet.</p>
   </div>
 </div>
 
@@ -6117,7 +6152,8 @@ function buildGallery(){
         <div class="gsearch"><input id="ytKeyIn" type="password" placeholder="YouTube Data API key"></div>
         <button class="gadd" id="ytGo">Connect channel</button>
         <p class="ghint" style="margin-top:8px">Free key from Google Cloud → YouTube Data API v3.
-          It stays on this computer — <b>don't share this file once a key is saved</b>.</p>`;
+          It stays in this browser — <b>the HTML file never contains it</b>. Restrict the key to
+          the YouTube Data API in Google Cloud.</p>`;
     }
   }
 
@@ -7211,7 +7247,7 @@ function aiStyleBlock(){
 function aiBusy(on){
   $('aiGo').style.display = on ? 'none' : '';
   $('aiStop').style.display = on ? '' : 'none';
-  $('aiPane').classList.toggle('aibusy', false);
+  $('aiPane').classList.toggle('aibusy', on);   // chalte waqt dobara mat dabao
 }
 function aiFail(err){
   const m = String(err && err.message || err);
@@ -7634,14 +7670,33 @@ const MODE_TOOLS = {
   present:['select','hand','pen','marker','highlighter','chalk','eraser','duster',
            'text','rect','ellipse','arrow']
 };
-function toolInMode(t, m){ return (MODE_TOOLS[m] || []).includes(t); }
+function toolInMode(t, m){
+  if(simpleUI && !SIMPLE_TOOLS.includes(t)) return false;
+  return (MODE_TOOLS[m] || []).includes(t);
+}
+/* ---------- SIMPLE MODE ----------
+   Poora studio pehli baar me dara deta hai. Simple me sirf wahi cheezein rehti
+   hain jo har video me lagti hain — baaki chhupti nahi, hat jaati hain. Ek
+   click me sab wapas. Naye user ke liye default Simple hi hai. */
+const SIMPLE_TOOLS = ['select','hand','pen','chalk','eraser','duster','text','card','image'];
+const SIMPLE_HIDE = ['gridBtn','themeBtn','frameBtn','exportBtn','snapBtn','recMode',
+                     'layersBtn','helpBtn','scriptPanelBtn'];
+let simpleUI = true;
 let uiMode = 'write';
 
 function applyMode(){
   for(const el of document.querySelectorAll('[data-mo]')){
     if(el.classList.contains('mbtn')) continue;          // switcher khud hamesha
-    el.classList.toggle('mo-off', !el.dataset.mo.split(' ').includes(uiMode));
+    const inMode = el.dataset.mo.split(' ').includes(uiMode);
+    const tl = el.dataset.tool;
+    const hide = !inMode
+      || (simpleUI && tl && !SIMPLE_TOOLS.includes(tl))
+      || (simpleUI && el.id && SIMPLE_HIDE.includes(el.id));
+    el.classList.toggle('mo-off', hide);
   }
+  const sb = $('simpleBtn');
+  if(sb){ sb.textContent = simpleUI ? '◔ Simple' : '◕ All tools';
+          sb.classList.toggle('blue', simpleUI); }
   for(const b of document.querySelectorAll('.mbtn'))
     b.classList.toggle('on', b.dataset.mo === uiMode);
 
@@ -7672,6 +7727,14 @@ function setMode(m){
 }
 document.querySelectorAll('.mbtn').forEach(b =>
   b.addEventListener('click', () => setMode(b.dataset.mo)));
+
+function setSimple(on){
+  simpleUI = !!on;
+  try{ localStorage.setItem('tbv_studio_simple', simpleUI ? '1' : '0'); }catch(err){}
+  applyMode();
+  toast(simpleUI ? 'Simple — sirf roz ke tools' : 'Sab tools khul gaye');
+}
+$('simpleBtn').addEventListener('click', () => setSimple(!simpleUI));
 
 /* ==================== RESPONSIVE TOP BAR ====================
    Buttons badhte gaye aur bar chhoti screen pe kat-ne lagi — Present button tak
@@ -7897,6 +7960,9 @@ function renderSettings(){
       <div class="sright"><button class="ib" id="sGrid" style="flex:0 0 auto">${showGrid?'On':'Off'}</button></div></div>
     <div class="srow"><div class="sleft"><b>Snapping</b><span>Drag karte waqt align guides.</span></div>
       <div class="sright"><button class="ib" id="sSnap" style="flex:0 0 auto">${snapOn?'On':'Off'}</button></div></div>
+    <div class="srow"><div class="sleft"><b>Toolbar</b>
+      <span>Simple me sirf roz kaam aane wale tools rehte hain. All tools sab kuch khol deta hai.</span></div>
+      <div class="sright"><button class="ib" id="sSimple" style="flex:0 0 auto">${simpleUI?'Simple':'All tools'}</button></div></div>
     <div class="srow"><div class="sleft"><b>Board surface</b>
       <span>Whiteboard, hara board, blackboard ya copy. Chalk wale boards pe likhawat
         apne aap chalk jaisi ho jaati hai.</span></div>
@@ -7942,6 +8008,7 @@ function renderSettings(){
   on('sImpKeys', () => $('keyPick').click());
   on('sGrid', () => { toggleGrid(); renderSettings(); });
   on('sSnap', () => { snapOn = !snapOn; save(); renderSettings(); toast(snapOn?'Snapping on':'Snapping off'); });
+  on('sSimple', () => { setSimple(!simpleUI); renderSettings(); });
   const su = $('sSurf'); if(su) su.addEventListener('change', () => { setSurface(su.value); renderSettings(); });
   on('sShape', () => { shapeSnap = !shapeSnap; save(); renderSettings();
                        toast(shapeSnap ? 'Shapes seedhe honge' : 'Haath ka jaisa hi rahega'); });
@@ -8725,7 +8792,10 @@ let bootDone = false;                        // tests aur boot-time races ke liy
   applyGrid();
   updateZoomLabel(); updateHistBtns(); setTool('select');
   armTooltips();                               // sab native title hata do
-  try{ const m = localStorage.getItem('tbv_studio_mode'); if(MODE_TOOL[m]) uiMode = m; }catch(err){}
+  try{
+    const m = localStorage.getItem('tbv_studio_mode'); if(MODE_TOOL[m]) uiMode = m;
+    const sp = localStorage.getItem('tbv_studio_simple'); if(sp !== null) simpleUI = sp === '1';
+  }catch(err){}
   applyMode();
   setSaveState('ok');
   if(document.fonts?.ready) document.fonts.ready.then(checkFonts);

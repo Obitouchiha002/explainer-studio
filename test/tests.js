@@ -416,6 +416,39 @@ T('clear board: poochta hai, undo sab laata hai', () => {
 });
 
 /* ------------------------------ modes ------------------------------ */
+T('Simple mode: sirf roz ke tools, aur ek click me sab wapas', () => {
+  S.setSimple(true);
+  const simpleWrite = S.MODE_TOOLS.write.filter(t => S.toolInMode(t, 'write'));
+  if(simpleWrite.length > 10) throw new Error('Simple me bhi ' + simpleWrite.length + ' tools');
+  for(const t of ['select','pen','text','eraser'])
+    if(!S.toolInMode(t, 'write')) throw new Error(t + ' Simple me hona hi chahiye');
+  for(const t of ['pencil','marker','highlighter'])
+    if(S.toolInMode(t, 'write')) throw new Error(t + ' Simple me nahi hona chahiye');
+
+  S.setSimple(false);
+  const allWrite = S.MODE_TOOLS.write.filter(t => S.toolInMode(t, 'write'));
+  if(allWrite.length <= simpleWrite.length) throw new Error('All tools me bhi utne hi tools');
+  for(const t of ['pencil','marker','highlighter'])
+    if(!S.toolInMode(t, 'write')) throw new Error(t + ' All tools me bhi nahi aaya');
+  S.setSimple(true);
+});
+
+T('AI chalte waqt pane disable hota hai', () => {
+  const css = H.css;
+  if(!/\.aibusy\{[^}]*pointer-events\s*:\s*none/.test(css))
+    throw new Error('.aibusy click rokta hi nahi');
+  if(/aibusy',\s*false\)/.test(H.html))
+    throw new Error('aiBusy hamesha false pass kar raha hai — pane kabhi disable nahi hoga');
+});
+
+T('key ke baare me galat baat kahin na likhi ho', () => {
+  if(/key travels with it/i.test(H.html))
+    throw new Error('galat: key HTML file me nahi jaati, localStorage me rehti hai');
+  if(!/never written into the HTML file|HTML file never contains it/i.test(H.html))
+    throw new Error('sahi baat kahin likhi hi nahi');
+});
+
+
 T('har mode me sirf usi kaam ke tools', () => {
   const off = () => [...H.html.matchAll(/data-tool="(\w+)"[^>]*data-mo="([^"]+)"/g)]
     .map(m => ({ tool:m[1], modes:m[2].split(' ') }));
