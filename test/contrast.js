@@ -17,13 +17,19 @@ const pick = (b, k) => { const m = b.match(new RegExp('\\' + k + ':\\s*(#[0-9A-F
 const light = block(/\[data-theme="light"\]\{([\s\S]*?)\n  \}/);
 const dark  = block(/:root\{([\s\S]*?)\n  \}/);
 
+/* WCAG 3:1 sirf un kinaron pe lagta hai jo batate hain ki cheez interactive hai
+   (input, select, button). Panel ka kinara decorative hai — alagav shadow se
+   aata hai. Isliye --edge naapte hain, --line nahi. Ye badla isliye kyunki
+   --line ko gehra karne se poora UI bhaari outline wala lagne laga tha. */
 const rows = [
-  ['light', 'border on canvas',  '--line',  '--bg',     3.0],
+  ['light', 'input border',      '--edge',  '--panel2', 3.0],
+  ['light', 'input border/bg',   '--edge',  '--bg',     3.0],
   ['light', 'muted on panel',    '--muted', '--panel2', 4.5],
   ['light', 'sub on panel',      '--sub',   '--panel2', 4.5],
   ['light', 'ink on canvas',     '--ink',   '--bg',     4.5],
   ['light', 'blue on canvas',    '--blue',  '--bg',     3.0],
-  ['dark',  'border on canvas',  '--line',  '--bg',     3.0],
+  ['dark',  'input border',      '--edge',  '--panel2', 3.0],
+  ['dark',  'input border/bg',    '--edge',  '--bg',     3.0],
   ['dark',  'muted on panel',    '--muted', '--panel2', 4.5],
   ['dark',  'sub on panel',      '--sub',   '--panel2', 4.5],
   ['dark',  'ink on canvas',     '--ink',   '--bg',     4.5],
