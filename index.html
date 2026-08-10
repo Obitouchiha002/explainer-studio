@@ -307,6 +307,14 @@
   /* ---------------- RECORDER ---------------- */
   .tbtn.rec.on{background:var(--red);color:#fff;}
   .tbtn.rec.on:hover{background:var(--red);color:#fff;filter:brightness(1.08);}
+  /* 3·2·1 — Record dabate hi recording shuru ho jaati thi, yaani pehla frame
+     hamesha aapka mouse button ke upar. Ab teen second milte hain. */
+  .cdown{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;
+    background:rgba(0,0,0,.55);backdrop-filter:blur(3px);}
+  .cdown.on{display:flex;}
+  .cdown b{font-family:'Anton',system-ui,sans-serif;font-size:clamp(90px,22vw,240px);
+    color:#fff;text-shadow:0 10px 50px rgba(0,0,0,.6);animation:cdPulse .9s ease-out;}
+  @keyframes cdPulse{from{opacity:0;transform:scale(1.4)}to{opacity:1;transform:none}}
   .recdot{position:fixed;top:64px;left:50%;transform:translateX(-50%);z-index:61;display:none;
     align-items:center;gap:9px;padding:7px 14px;border-radius:999px;background:var(--panel-solid);
     border:1px solid var(--red);box-shadow:var(--shadow);font-weight:800;font-size:13px;}
@@ -360,6 +368,16 @@
   .cstep input{width:46px;height:28px;border:0;background:transparent;text-align:center;
     font-size:13px;font-weight:800;outline:none;color:var(--ink);}
   .cswatch{width:26px;height:26px;border-radius:8px;border:2px solid var(--line);flex:0 0 26px;}
+
+  /* ---------------- FIND ---------------- */
+  .findbar{position:fixed;top:66px;left:50%;transform:translateX(-50%);z-index:44;display:none;
+    align-items:center;gap:6px;padding:8px 10px;border-radius:14px;background:var(--panel-solid);
+    border:1px solid var(--line);box-shadow:0 10px 30px rgba(16,24,40,.16);}
+  .findbar.on{display:flex;}
+  .findbar input{width:280px;background:var(--panel2);border:1.5px solid var(--line);
+    border-radius:10px;padding:8px 11px;font-size:13.5px;outline:none;}
+  .findbar input:focus{border-color:var(--blue);}
+  .fcount{font-size:12px;font-weight:800;color:var(--muted);min-width:52px;text-align:center;}
 
   /* ---------------- SETTINGS ---------------- */
   .srow{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--line);}
@@ -724,6 +742,54 @@
   <button class="tbtn" data-pri="3" data-ico="🎥" id="recMode" title="What gets recorded">🎥 Board</button>
   <button class="tbtn" data-pri="3" data-ico="📸" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
   <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
   <button class="tbtn blue" data-pri="3" data-ico="⬇︎" id="installBtn" title="Install — app ki tarah lag jayega, offline bhi chalega" style="display:none">⬇︎ Install</button>
   <button class="tbtn" data-pri="2" data-ico="↻" id="updBtn" title="Naya version aa gaya — dabao to lag jayega" style="display:none">↻ Update</button>
   <button class="tbtn" data-pri="4" data-ico="?" id="helpBtn" title="Shortcuts (?)">?</button>
@@ -952,7 +1018,7 @@
   <button id="pPrev">←</button>
   <span class="prog" id="pProg">0 / 0</span>
   <button id="pNext">→</button>
-  <span class="kh">Space / click = next</span>
+  <span class="kh">Space = next · 1-9 = jump</span>
   <button id="pTime" class="prog" title="Recording timer — click to reset">0:00</button>
   <button id="pAuto" title="Auto-play: advance every X seconds">▶ Auto</button>
   <input type="number" id="pSecs" min="1" max="120" value="6" title="Auto-play interval in seconds">
@@ -987,6 +1053,16 @@
 <div class="toast" id="toast"></div>
 <div class="tipbox" id="tipbox"></div>
 <div class="recdot" id="recDot"><i></i><span id="recTime">0:00</span></div>
+<div class="cdown" id="cdown"><b id="cdownN">3</b></div>
+
+<!-- ======= FIND ======= -->
+<div class="findbar" id="findbar">
+  <input id="findQ" placeholder="Board pe dhoondho — card, text, note…" spellcheck="false">
+  <span class="fcount" id="findCount"></span>
+  <button class="smini" id="findPrev" data-tip="Pichla (⇧+Enter)">↑</button>
+  <button class="smini" id="findNext" data-tip="Agla (Enter)">↓</button>
+  <button class="fx" id="findClose">✕</button>
+</div>
 
 <!-- ======= SETTINGS ======= -->
 <div class="help" id="setModal">
@@ -1392,6 +1468,7 @@ function histApply(json){
 }
 function snapshot(){
   if(!doc) return;
+  noteEdit();
   undoStack.push(histState());
   if(undoStack.length > 70) undoStack.shift();
   redoStack.length = 0;
@@ -1574,14 +1651,32 @@ async function loadAll(){
   if(!doc) newBoard('Board 1', true);
 }
 
+/* Board file kabhi adhoori ya kharab mil sakti hai (storage bhar gaya, sync
+   beech me ruk gaya). Aise me poora app toot-ne ki jagah jo bacha hai wo khol
+   dete hain aur saaf bata dete hain. Alag function isliye ki ise seedha test
+   kiya ja sake, bina asli board ko chhue. */
+function sanitizeDoc(d, silent){
+  const out = (d && typeof d === 'object') ? d : {};
+  out.name = typeof out.name === 'string' ? out.name : 'Untitled';
+  out.views = (out.views && typeof out.views === 'object') ? out.views : {};
+  out.stepNotes = (out.stepNotes && typeof out.stepNotes === 'object') ? out.stepNotes : {};
+  out.camera = (out.camera && typeof out.camera === 'object') ? out.camera : { x:0, y:0, z:1 };
+  if(!Array.isArray(out.objects)){
+    out.objects = [];
+    if(!silent) toast('⚠️ Is board ka data kharab tha — khaali khol diya. JSON backup se import karo.');
+  } else {
+    const before = out.objects.length;
+    out.objects = out.objects.filter(o => o && typeof o === 'object' && o.id && o.type);
+    if(out.objects.length !== before && !silent)
+      toast(`⚠️ ${before - out.objects.length} kharab cheezein hata di`);
+  }
+  return out;
+}
+
 async function openBoard(id, silent){
   const loaded = await storeGet(id);
   if(!loaded){ if(!silent) toast('Board not found'); return; }
-  doc = loaded;
-  doc.name = doc.name || 'Untitled';
-  doc.views = doc.views || {};
-  doc.stepNotes = doc.stepNotes || {};
-  doc.objects = doc.objects || [];
+  doc = sanitizeDoc(loaded, silent);
   cam.x = doc.camera?.x || 0; cam.y = doc.camera?.y || 0; cam.z = doc.camera?.z || 1;
   sel = []; undoStack.length = 0; redoStack.length = 0; step = 0;
   typeState.clear(); revealState.clear();
@@ -4826,7 +4921,7 @@ function gotoStep(n, animate){
   step = clamp(n, 0, maxStep());
   startTyping(step);
   startReveal(step);
-  const v = doc.views[step];
+  const v = (doc.views || {})[step];
   // frame = slide. Jis frame ke andar is step ki cheezein hain, camera bilkul
   // usi pe baithta hai — poore slide ke dauraan framing ek jaisi rehti hai,
   // isliye video me har reveal pe camera hilta nahi.
@@ -5391,6 +5486,21 @@ const BLOCK_TAG = 'TBV_BLOCK::', ASSET_TAG = 'TBV_ASSET::',
    Apne logo / screenshot / PNG ek baar daalo — IndexedDB me pade rehte hain
    aur har board me gallery se seedha drag ho jaate hain. (Asli company logo
    unke official brand/press page se lo — wahi sahi source hai.) */
+/* Boards sirf is browser me hain. Log backup lena bhool jaate hain aur ek din
+   storage saaf hote hi 26 video ka kaam chala jaata hai. Isliye ek halki si yaad
+   dilate hain — baar-baar nahi, sirf jab kaafi kaam ho chuka ho. */
+const LS_BACKUP = 'tbv_studio_lastbackup';
+let editsSinceBackup = 0;
+function noteEdit(){
+  editsSinceBackup++;
+  if(editsSinceBackup !== 120) return;                  // theek ek baar
+  let last = 0;
+  try{ last = +localStorage.getItem(LS_BACKUP) || 0; }catch(err){}
+  const days = (Date.now() - last)/864e5;
+  if(last && days < 3) return;
+  toast('💾 Kaafi kaam ho gaya — Settings ⚙ se "Backup all" le lo');
+}
+
 const LS_ASSETS = 'tbv_studio_assets';
 let assets = [];
 
@@ -6898,7 +7008,8 @@ document.addEventListener('keydown', e => {
     const pk = (e.key || '').toLowerCase();
     if(e.code === 'Space' || e.code === 'ArrowRight' || e.code === 'PageDown'){ e.preventDefault(); stopAuto(); gotoStep(step+1); }
     else if(e.code === 'ArrowLeft' || e.code === 'PageUp'){ e.preventDefault(); stopAuto(); gotoStep(step-1); }
-    else if(e.key === 'Escape'){ if(!document.fullscreenElement) exitPresent(); }
+    else if(e.key === 'Escape'){ if(cancelCountdown()) return;
+                                 if(!document.fullscreenElement) exitPresent(); }
     else if(pk === 'f'){ $('pFull').click(); }
     else if(pk === 'l'){ $('pLaser').click(); }
     else if(pk === 's'){ toggleSpotlight(); }
@@ -6907,9 +7018,15 @@ document.addEventListener('keydown', e => {
     else if(pk === 'd'){ toggleGrid(); }
     else if(e.key === '\\'){ openScriptPanel(); }
     else if(e.key === '0'){ stopAuto(); gotoStep(0); }
+    // 1-9 se seedha us step pe — 15 step wale board me next-next dabana bekaar hai
+    else if(/^[1-9]$/.test(e.key)){ stopAuto(); gotoStep(+e.key); }
+    else if(e.key === 'Home'){ stopAuto(); gotoStep(0); }
+    else if(e.key === 'End'){ stopAuto(); gotoStep(maxStep()); }
     return;
   }
   if(typing) return;
+  if(e.key === 'F5'){ e.preventDefault(); enterPresent(); return; }
+  if(e.key === 'Escape' && cancelCountdown()) return;
   if(e.key === '?' || (e.shiftKey && e.key === '/')){ e.preventDefault(); toggleHelp(); return; }
   if(e.key === 'Escape' && $('help').classList.contains('on')){ toggleHelp(false); return; }
 
@@ -6920,6 +7037,7 @@ document.addEventListener('keydown', e => {
     const b = $('insp').querySelector('[data-act="dup"]'); b?.click(); return; }
   if((e.ctrlKey || e.metaKey) && k === 'a'){ e.preventDefault(); sel = objects().filter(pickable).map(o => o.id);
     refreshInspector(); requestDraw(); return; }
+  if((e.ctrlKey || e.metaKey) && k === 'f'){ e.preventDefault(); openFind(true); return; }
   if((e.ctrlKey || e.metaKey) && k === 'g'){ e.preventDefault(); e.shiftKey ? ungroupSel() : groupSel(); return; }
   if((e.ctrlKey || e.metaKey) && (k === '=' || k === '+')){ e.preventDefault(); zoomBy(1.25); return; }
   if((e.ctrlKey || e.metaKey) && k === '-'){ e.preventDefault(); zoomBy(1/1.25); return; }
@@ -7142,6 +7260,54 @@ cvs.addEventListener('contextmenu', e => {
   ]);
 });
 
+/* ============================== FIND ==============================
+   Board pe 40 cheezein ho jaayein to koi ek card dhoondhna dard ban jaata hai.
+   Ctrl+F se text dhoondho, Enter se ek-ek pe camera jaata hai. */
+let findHits = [], findAt = -1;
+
+function objText(o){
+  return [o.title, o.text, o.detail, o.label, o.action, o.expect, o.mistake, o.notes, o.emoji]
+    .filter(v => typeof v === 'string').join(' ');
+}
+function runFind(){
+  const q = ($('findQ').value || '').trim().toLowerCase();
+  findHits = q ? objects().filter(o => !o.hidden && objText(o).toLowerCase().includes(q)) : [];
+  findAt = findHits.length ? 0 : -1;
+  paintFind();
+}
+function paintFind(){
+  const c = $('findCount');
+  c.textContent = !$('findQ').value.trim() ? ''
+    : findHits.length ? (findAt + 1) + ' / ' + findHits.length : 'kuch nahi';
+  if(findAt >= 0){
+    const o = findHits[findAt];
+    sel = [o.id];
+    refreshInspector();
+    fitTo([o], true);
+  }
+  requestDraw();
+}
+function findStep(d){
+  if(!findHits.length) return;
+  findAt = (findAt + d + findHits.length) % findHits.length;
+  paintFind();
+}
+function openFind(on){
+  const show = on === undefined ? !$('findbar').classList.contains('on') : on;
+  $('findbar').classList.toggle('on', show);
+  if(show) setTimeout(() => { $('findQ').select(); $('findQ').focus(); }, 20);
+  else { findHits = []; findAt = -1; }
+}
+$('findQ').addEventListener('input', runFind);
+$('findQ').addEventListener('keydown', e => {
+  e.stopPropagation();
+  if(e.key === 'Enter'){ e.preventDefault(); findStep(e.shiftKey ? -1 : 1); }
+  if(e.key === 'Escape'){ openFind(false); }
+});
+$('findNext').addEventListener('click', () => findStep(1));
+$('findPrev').addEventListener('click', () => findStep(-1));
+$('findClose').addEventListener('click', () => openFind(false));
+
 /* ============================ SETTINGS ============================
    Sab kuch ek jagah, taaki key dhoondhne ke liye gallery ke andar na jaana pade. */
 function pill(on, yes, no){ return `<span class="spill ${on?'ok':'no'}">${on ? yes : no}</span>`; }
@@ -7245,6 +7411,8 @@ async function backupAllBoards(){
   }
   dl(URL.createObjectURL(new Blob([JSON.stringify(out)], { type:'application/json' })),
      'explainer-studio-backup.json');
+  editsSinceBackup = 0;
+  try{ localStorage.setItem(LS_BACKUP, String(Date.now())); }catch(err){}
   toast(`Backed up ${out.boards.length} board${out.boards.length===1?'':'s'} ✓`);
 }
 
@@ -7765,7 +7933,38 @@ function stopRecording(){
   $('recBtn').textContent = '⏺ Record';
   $('recDot').classList.remove('on');
 }
-function toggleRecording(){ rec ? stopRecording() : startRecording(); }
+/* Teen second ka countdown, phir recording. Esc se rok sakte ho. */
+let cdTimer = null;
+function countdownThen(fn){
+  let n = 3;
+  const box = $('cdown'), num = $('cdownN');
+  num.textContent = n;
+  box.classList.add('on');
+  cdTimer = setInterval(() => {
+    n--;
+    if(n <= 0){
+      clearInterval(cdTimer); cdTimer = null;
+      box.classList.remove('on');
+      fn();
+      return;
+    }
+    num.textContent = n;
+    // har ginti pe animation dobara chale
+    num.style.animation = 'none'; void num.offsetWidth; num.style.animation = '';
+  }, 900);
+}
+function cancelCountdown(){
+  if(!cdTimer) return false;
+  clearInterval(cdTimer); cdTimer = null;
+  $('cdown').classList.remove('on');
+  toast('Recording cancelled');
+  return true;
+}
+function toggleRecording(){
+  if(cancelCountdown()) return;
+  if(rec){ stopRecording(); return; }
+  countdownThen(() => startRecording());
+}
 $('recBtn').addEventListener('click', toggleRecording);
 $('snapBtn').addEventListener('click', exportViewPNG);
 $('keyPick').addEventListener('change', e => {

@@ -41,6 +41,9 @@ const BRIDGE = `
   get showGrid(){return showGrid}, set showGrid(v){showGrid=v},
   get livePath(){return livePath}, get mode(){return mode},
   get bootDone(){return bootDone},
+  get findHits(){return findHits}, get findAt(){return findAt},
+  get editsSinceBackup(){return editsSinceBackup},
+  set doc(v){doc=v},
 };`;
 const script = html.match(/<script>\n([\s\S]*?)\n<\/script>/)[1] + BRIDGE;
 const css = html.split('<style>')[1].split('</style>')[0];
@@ -248,11 +251,11 @@ vm.createContext(sandbox);
 const checks = [];
 function T(name, fn){
   try{ fn(); checks.push(['ok', name]); }
-  catch(e){ checks.push(['bad', name, e.message]); }
+  catch(e){ checks.push(['bad', name, e.message, e.stack]); }
 }
 async function T2(name, fn){
   try{ await fn(); checks.push(['ok', name]); }
-  catch(e){ checks.push(['bad', name, e.message]); }
+  catch(e){ checks.push(['bad', name, e.message, e.stack]); }
 }
 function pump(n){ let i=0; while(rafQueue.length && i<n){ rafQueue.shift()(performance.now()); i++; } }
 
@@ -292,7 +295,9 @@ module.exports = { S, T, T2, pump, ready, elById, listeners, store, NET, REC, to
                    setConfirm(v){ CONFIRM_SAYS = v; },
                    lastConfirm(){ return LAST_CONFIRM; },
                    report(){
-                     console.log(checks.map(c => c[0]==='ok' ? '  ✓ '+c[1] : '  ✗ '+c[1]+' → '+c[2]).join('\n'));
+                     console.log(checks.map(c => c[0]==='ok' ? '  ✓ '+c[1]
+       : '  ✗ '+c[1]+' → '+c[2] + (process.env.STACK && c[3]
+           ? '\n      ' + String(c[3]).split('\n').slice(1,4).join('\n      ') : '')).join('\n'));
                      const bad = checks.filter(c => c[0]==='bad');
                      console.log(bad.length ? `\n${bad.length} FAIL` : `\n${checks.length}/${checks.length} pass ✓`);
                      return bad.length;

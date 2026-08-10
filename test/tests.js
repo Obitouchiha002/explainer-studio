@@ -415,6 +415,73 @@ T('clear board: poochta hai, undo sab laata hai', () => {
   if(!S.doc.views[1] || S.doc.stepNotes[1] !== 'kuch') throw new Error('views/notes wapas nahi aaye');
 });
 
+/* --------------------------- practical use --------------------------- */
+T('find: board pe text dhoondhta hai', () => {
+  S.doc.objects = [];
+  S.objects().push(S.mkCard(0,0,'✨','Download karo','blue button',1));
+  S.objects().push(S.mkCard(600,0,'✨','Install karo','double click',2));
+  S.objects().push(S.mkText(0,400,'Install ho gaya',30,3,400));
+  elById.findQ.value = 'install';
+  S.runFind();
+  if(S.findHits.length !== 2) throw new Error('mile: ' + S.findHits.length + ', chahiye 2');
+  const first = S.findHits[0].id;
+  S.findStep(1);
+  if(S.findHits[S.findAt].id === first) throw new Error('agle par nahi gaya');
+  S.findStep(1);
+  if(S.findHits[S.findAt].id !== first) throw new Error('ghoom kar wapas nahi aaya');
+  elById.findQ.value = 'zzzz'; S.runFind();
+  if(S.findHits.length) throw new Error('na milne par bhi result');
+  // chhupi hui cheez search me nahi aani chahiye
+  S.objects()[0].hidden = true;
+  elById.findQ.value = 'download'; S.runFind();
+  if(S.findHits.length) throw new Error('hidden cheez search me aa gayi');
+  S.objects()[0].hidden = false;
+});
+
+T('present: 1-9 se kisi bhi step pe jump', () => {
+  S.doc.objects = [];
+  for(let i=1;i<=6;i++) S.objects().push(S.mkCard(i*400,0,'✨','C'+i,'x',i));
+  S.enterPresent();
+  const keys = listeners.filter(l => l.type === 'keydown');
+  for(const l of keys) l.fn({ key:'4', code:'Digit4', preventDefault(){}, stopPropagation(){}, target:{} });
+  if(S.step !== 4) throw new Error('4 dabane pe step ' + S.step);
+  for(const l of keys) l.fn({ key:'End', code:'End', preventDefault(){}, stopPropagation(){}, target:{} });
+  if(S.step !== S.maxStep()) throw new Error('End se aakhir pe nahi gaya');
+  S.exitPresent();
+});
+
+T('recording countdown: pehle ginti, phir shuru', () => {
+  let started = false;
+  S.countdownThen(() => { started = true; });
+  if(started) throw new Error('bina ginti ke hi shuru ho gaya');
+  if(!elById.cdown.classList.contains('on')) throw new Error('countdown dikha hi nahi');
+  if(!S.cancelCountdown()) throw new Error('cancel nahi hua');
+  if(elById.cdown.classList.contains('on')) throw new Error('cancel ke baad bhi dikh raha');
+});
+
+T('kharab board se poora app na tute', () => {
+  // live doc ko chhue bina — sanitizeDoc apne aap me test hota hai
+  for(const bad of [null, 'garbage', 42, { objects:'nope' },
+                    { objects:[null, 'junk', { type:'card' }] },
+                    { name:5, views:'x', stepNotes:null, objects:[{ id:'ok', type:'card' }] }]){
+    const d = S.sanitizeDoc(bad, true);
+    if(!Array.isArray(d.objects)) throw new Error('objects array nahi bana');
+    if(typeof d.name !== 'string') throw new Error('name string nahi');
+    if(!d.views || typeof d.views !== 'object') throw new Error('views object nahi');
+    if(!d.stepNotes || typeof d.stepNotes !== 'object') throw new Error('stepNotes object nahi');
+    if(!d.camera || typeof d.camera.z !== 'number') throw new Error('camera nahi bana');
+    for(const o of d.objects) if(!o.id || !o.type) throw new Error('kharab object bach gaya');
+  }
+  const kept = S.sanitizeDoc({ objects:[{ id:'a', type:'card' }, { id:'b', type:'text' }] }, true);
+  if(kept.objects.length !== 2) throw new Error('sahi objects bhi hata diye');
+});
+
+T('backup nudge sirf ek baar, aur backup ke baad reset', () => {
+  const before = S.editsSinceBackup;
+  for(let i=0;i<200;i++) S.noteEdit();
+  if(S.editsSinceBackup <= before) throw new Error('ginti nahi badhi');
+});
+
 }
 
 /* ------------------------------ async ------------------------------ */
