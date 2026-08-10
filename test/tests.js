@@ -415,6 +415,87 @@ T('clear board: poochta hai, undo sab laata hai', () => {
   if(!S.doc.views[1] || S.doc.stepNotes[1] !== 'kuch') throw new Error('views/notes wapas nahi aaye');
 });
 
+/* ------------------------- board surfaces ------------------------- */
+T('surfaces: har board ka apna rang, ink aur grid', () => {
+  const seen = new Set();
+  for(const k of Object.keys(S.SURFACES)){
+    S.setSurface(k);
+    const t = S.T();
+    if(!t.bg || !t.ink) throw new Error(k + ': bg/ink nahi');
+    if(t.bg === t.ink) throw new Error(k + ': ink background me gum ho jayegi');
+    seen.add(t.bg);
+    S.requestDraw(); pump(2);                // grid + sab kuch draw ho jaye
+  }
+  if(seen.size !== Object.keys(S.SURFACES).length) throw new Error('do boards ka rang ek jaisa');
+  S.setSurface('white');
+});
+
+T('chalkboard pe kaali ink apne aap safed ho jaati hai', () => {
+  S.setSurface('white');
+  S.brushColor = 'ink';
+  S.setSurface('green');
+  if(!S.chalkBoard()) throw new Error('green chalk board nahi mana');
+  if(S.brushColor === 'ink') throw new Error('hare board pe kaali chalk — kuch dikhega hi nahi');
+  S.setSurface('white');
+  if(S.brushColor !== 'ink') throw new Error('wapas white pe kaali ink nahi lauti');
+});
+
+T('chalk stroke draw hota hai aur mota hai', () => {
+  S.doc.objects = [];
+  const pts = []; for(let i=0;i<40;i++) pts.push({ x:i*8, y:Math.sin(i/4)*30, p:0.8 });
+  const st = { id:'c1', type:'stroke', tool:'chalk', color:'#F5F3EC', size:5, step:0, points:pts };
+  S.objects().push(st);
+  S.drawObject(st);
+  if(S.strokeWidth(st) <= st.size) throw new Error('chalk ki chaudai normal pen jaisi hai');
+});
+
+T('duster bade daayre me saaf karta hai', () => {
+  S.doc.objects = [];
+  const mk = (x) => { const pts=[{x, y:0, p:1},{x:x+5, y:5, p:1}];
+    const o = { id:'s'+x, type:'stroke', tool:'chalk', color:'ink', size:4, step:0, points:pts };
+    S.objects().push(o); return o; };
+  mk(0); mk(60); mk(400);
+  // chhota eraser sirf apne neeche wali line hataye
+  S.eraseAt(0, 0, true, 0);
+  if(S.objects().length !== 2) throw new Error('normal eraser ne galat ginti hatai');
+  // duster ek jhatke me aas-paas ka sab
+  S.eraseAt(60, 0, true, 120);
+  if(S.objects().length !== 1) throw new Error('duster ne aas-paas ka saaf nahi kiya');
+  if(!S.byId('s400')) throw new Error('duster ne door wali bhi uda di');
+});
+
+T('shape recognition: gola aur chaukor pakadta hai, aadhi line nahi', () => {
+  const mk = (pts, tool) => ({ id:'x', type:'stroke', tool:tool||'pen', color:'ink',
+                               size:3, step:0, points:pts });
+  // gola
+  const circ = []; for(let a=0;a<=360;a+=12){ const r=a*Math.PI/180;
+    circ.push({ x:200+Math.cos(r)*100 + (a%36?1.5:-1.5), y:200+Math.sin(r)*100, p:1 }); }
+  let out = S.recogniseShape(mk(circ));
+  if(!out || out.kind !== 'ellipse') throw new Error('gola nahi pakda: ' + (out && out.kind));
+
+  // chaukor
+  const rect = [];
+  for(let i=0;i<=20;i++) rect.push({ x:i*10, y:0, p:1 });
+  for(let i=0;i<=20;i++) rect.push({ x:200, y:i*8, p:1 });
+  for(let i=20;i>=0;i--) rect.push({ x:i*10, y:160, p:1 });
+  for(let i=20;i>=0;i--) rect.push({ x:0, y:i*8, p:1 });
+  out = S.recogniseShape(mk(rect));
+  if(!out || out.kind !== 'rect') throw new Error('chaukor nahi pakda: ' + (out && out.kind));
+
+  // aadhi lakeer — badalni NAHI chahiye
+  const line = []; for(let i=0;i<30;i++) line.push({ x:i*10, y:i*3, p:1 });
+  if(S.recogniseShape(mk(line))) throw new Error('seedhi lakeer ko shape bana diya');
+  // tedhi-medhi scribble
+  const scr = []; for(let i=0;i<40;i++) scr.push({ x:i*7, y:(i%2?40:0) + Math.sin(i)*20, p:1 });
+  if(S.recogniseShape(mk(scr))) throw new Error('scribble ko shape bana diya');
+  // highlighter kabhi nahi badalna chahiye
+  if(S.recogniseShape(mk(circ, 'highlighter'))) throw new Error('highlighter bhi badal diya');
+  // off ho to kuch na ho
+  S.shapeSnap = false;
+  if(S.recogniseShape(mk(circ))) throw new Error('off hone par bhi badal diya');
+  S.shapeSnap = true;
+});
+
 /* ------------------------ keyboard + mouse ------------------------ */
 T('wheel: pan, Ctrl se zoom, Shift se side me', () => {
   const wheels = listeners.filter(l => l.type === 'wheel');
