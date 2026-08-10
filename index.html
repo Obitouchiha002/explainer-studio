@@ -51,6 +51,15 @@
        overflow-x:auto;overflow-y:hidden;scrollbar-width:none;}
   .top::-webkit-scrollbar{display:none}
   .top > *{flex:0 0 auto;}
+  /* jagah kam padi to pehle label jaata hai, phir button khud overflow me */
+  .top.tight .tbtn[data-ico]{font-size:0;padding:8px 10px;}
+  .top.tight .tbtn[data-ico]::before{content:attr(data-ico);font-size:15px;}
+  .top .tbtn.solid{font-size:14px !important;}
+  #ovfPop{width:230px;max-height:70vh;overflow-y:auto;}
+  #ovfPop .tbtn{display:flex;width:100%;justify-content:flex-start;gap:9px;
+                padding:9px 11px;border-radius:10px;font-size:13.5px;margin-bottom:3px;}
+  #ovfPop .tbtn:hover{background:var(--panel2);}
+  #ovfPop .divider{display:none;}
   .top .spacer{flex:1 1 auto;min-width:8px;}
   .brand{font-family:'Anton';font-size:17px;letter-spacing:.6px;white-space:nowrap;}
   .brand .y{color:var(--yellow);}
@@ -650,11 +659,11 @@
   <div class="brand">TECH BY <span class="y">VANSH</span></div>
   <div class="divider"></div>
   <input class="bname" id="boardName" value="Board 1" spellcheck="false">
-  <button class="tbtn" id="boardsBtn">📚 Boards ▾</button>
-  <button class="tbtn blue" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
-  <button class="tbtn" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
-  <button class="tbtn" id="flowBtn">🗺️ Flow</button>
-  <button class="tbtn" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <button class="tbtn" data-pri="1" data-ico="📚" id="boardsBtn">📚 Boards ▾</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
   <div class="spacer"></div>
   <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
   <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
@@ -662,18 +671,67 @@
   <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
   <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
   <div class="divider"></div>
-  <button class="tbtn" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
-  <button class="tbtn rec" id="recBtn" title="Start / stop recording">⏺ Record</button>
-  <button class="tbtn" id="recMode" title="What gets recorded">🎥 Board</button>
-  <button class="tbtn" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
-  <button class="tbtn" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
-  <button class="tbtn blue" id="installBtn" title="Install — app ki tarah lag jayega, offline bhi chalega" style="display:none">⬇︎ Install</button>
-  <button class="tbtn" id="updBtn" title="Naya version aa gaya — dabao to lag jayega" style="display:none">↻ Update</button>
-  <button class="tbtn" id="helpBtn" title="Shortcuts (?)">?</button>
-  <button class="tbtn" id="gridBtn" title="Dot grid on / off (D)">⠿</button>
-  <button class="tbtn" id="themeBtn" title="Light / Dark theme">🌙</button>
-  <button class="tbtn" id="frameBtn" title="Video safe frame: off → 16:9 → 9:16 (G)">🎬 off</button>
-  <button class="tbtn" id="exportBtn" title="PNG export · Shift+click = transparent background">⬇︎ PNG</button>
+  <button class="tbtn" data-pri="2" data-ico="📄" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="3" data-ico="⬇︎" id="installBtn" title="Install — app ki tarah lag jayega, offline bhi chalega" style="display:none">⬇︎ Install</button>
+  <button class="tbtn" data-pri="2" data-ico="↻" id="updBtn" title="Naya version aa gaya — dabao to lag jayega" style="display:none">↻ Update</button>
+  <button class="tbtn" data-pri="4" data-ico="?" id="helpBtn" title="Shortcuts (?)">?</button>
+  <button class="tbtn" data-pri="4" data-ico="⠿" id="gridBtn" title="Dot grid on / off (D)">⠿</button>
+  <button class="tbtn" data-pri="4" data-ico="🌙" id="themeBtn" title="Light / Dark theme">🌙</button>
+  <button class="tbtn" data-pri="3" data-ico="🎬" id="frameBtn" title="Video safe frame: off → 16:9 → 9:16 (G)">🎬 off</button>
+  <button class="tbtn" data-pri="2" data-ico="⬇︎" id="exportBtn" title="PNG export · Shift+click = transparent background">⬇︎ PNG</button>
+  <button class="tbtn" id="ovfBtn" data-tip="Aur — jo cheezein jagah na hone se chhup gayi" style="display:none">⋯</button>
   <button class="tbtn solid" id="presentBtn">▶ Present</button>
 </div>
 
@@ -881,6 +939,7 @@
 <!-- ======= POPOVERS ======= -->
 <div class="pop" id="stickerPop"></div>
 <div class="pop blist" id="boardsPop"></div>
+<div class="pop" id="ovfPop"></div>
 
 <textarea id="editor" spellcheck="false"></textarea>
 <input type="file" id="filePick" accept="image/*" multiple style="display:none">
@@ -6963,6 +7022,126 @@ async function importKeys(file){
   }
 }
 
+/* ==================== RESPONSIVE TOP BAR ====================
+   Buttons badhte gaye aur bar chhoti screen pe kat-ne lagi — Present button tak
+   gayab ho jaata tha. Ab bar khud naapti hai: pehle labels hata ke sirf icons
+   rakhti hai, phir bhi na samaye to kam zaroori buttons ⋯ menu me chale jaate
+   hain. Board ka naam aur Present kabhi nahi hilte. */
+let ovfHome = new Map();                       // button -> uski asli jagah
+
+function fitTopBar(){
+  const bar = document.querySelector('.top');
+  const pop = $('ovfPop'), btn = $('ovfBtn');
+  if(!bar || !pop) return;
+
+  // sab wapas apni jagah, phir naye sire se naapo
+  for(const [el, ref] of ovfHome) if(el.parentNode === pop) bar.insertBefore(el, ref);
+  ovfHome.clear();
+  pop.innerHTML = '';
+  btn.style.display = 'none';
+  bar.classList.remove('tight');
+
+  const fits = () => bar.scrollWidth <= bar.clientWidth + 1;
+  if(fits()) return;
+
+  bar.classList.add('tight');                  // step 1: sirf icons
+  if(fits()) return;
+
+  // step 2: sabse kam zaroori (bada data-pri) pehle ⋯ me
+  btn.style.display = '';
+  const movable = [...bar.querySelectorAll('.tbtn[data-pri]')]
+    .sort((a, b) => (+b.dataset.pri) - (+a.dataset.pri));
+  for(const el of movable){
+    if(fits()) break;
+    ovfHome.set(el, el.nextSibling);
+    pop.appendChild(el);
+  }
+  if(!pop.children.length){ btn.style.display = 'none'; return; }
+  // Ab jab kuch buttons hat gaye, dekho kya bina `tight` ke bhi samaa jaayega —
+  // yaani poore labels wapas aa sakte hain. Pehle yahan scrollWidth `tight`
+  // lagi hui halat me naapa jaa raha tha, isliye hamesha "fit hai" nikalta aur
+  // labels wapas aate hi bar dobara kat jaati thi.
+  bar.classList.remove('tight');
+  if(bar.scrollWidth > bar.clientWidth + 1) bar.classList.add('tight');
+}
+$('ovfBtn').addEventListener('click', e => {
+  const p = $('ovfPop');
+  const on = p.classList.contains('on');
+  closePops();
+  if(on) return;
+  const r = e.currentTarget.getBoundingClientRect();
+  p.style.left = clamp(r.right - 230, 12, window.innerWidth - 242) + 'px';
+  p.style.top = '62px';
+  p.classList.add('on');
+});
+window.addEventListener('resize', () => { fitTopBar(); });
+
+/* ==================== RIGHT-CLICK MENU ====================
+   Desktop pe mouse se kaam karna aasan ho — sab kuch panel dhoondhne ki jagah
+   wahin haath ke neeche. */
+function ctxMenu(x, y, items){
+  const p = $('ovfPop');
+  closePops();
+  p.innerHTML = items.map(it => it === '-' ? '<div class="cdiv" style="width:100%;height:1px;margin:5px 0"></div>'
+    : `<button class="tbtn" data-cm="${it[0]}">${it[1]}</button>`).join('');
+  p.style.left = clamp(x, 8, window.innerWidth - 242) + 'px';
+  p.style.top  = clamp(y, 8, window.innerHeight - p.offsetHeight - 8) + 'px';
+  p.classList.add('on');
+  p.querySelectorAll('[data-cm]').forEach(b => b.addEventListener('click', () => {
+    closePops();
+    const fn = items.find(i => i !== '-' && i[0] === b.dataset.cm);
+    if(fn && fn[2]) fn[2]();
+  }));
+}
+cvs.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  if(present) return;
+  const w = toWorld(e.clientX, e.clientY);
+  const hit = hitTest(w.x, w.y);
+  if(hit && !sel.includes(hit.id)){ sel = expandSelection([hit.id]); refreshInspector(); requestDraw(); }
+  const list = selObjs();
+
+  if(!list.length){
+    ctxMenu(e.clientX, e.clientY, [
+      ['paste', '📋  Paste', () => document.execCommand && toast('Ctrl+V se paste karo')],
+      ['all',   '⬚  Select all',   () => { sel = objects().filter(pickable).map(o => o.id);
+                                            refreshInspector(); requestDraw(); }],
+      '-',
+      ['fit',   '⤢  Zoom to fit',  () => fitTo(objects(), true)],
+      ['grid',  '⠿  Dot grid',     toggleGrid],
+      ['layers','🗂  Layers',       () => openLayers(true)]
+    ]);
+    return;
+  }
+  const one = list[0];
+  ctxMenu(e.clientX, e.clientY, [
+    ['dup',   '⧉  Duplicate',   () => { const c = remapIds(JSON.parse(JSON.stringify(list)));
+              snapshot(); c.forEach(o => { if(o.type !== 'link') moveObj(o, 34, 34); });
+              for(const o of c) o.type === 'link' ? doc.objects.unshift(o) : doc.objects.push(o);
+              sel = c.map(o => o.id); refreshInspector(); save(); requestDraw(); }],
+    ['anim',  '✨  Animate…',    () => openAnim(true)],
+    '-',
+    ['front', '↑  Bring to front', () => { snapshot();
+              const keep = objects().filter(o => !sel.includes(o.id));
+              doc.objects = [...keep, ...list]; save(); requestDraw(); }],
+    ['back',  '↓  Send to back',  () => { snapshot();
+              const keep = objects().filter(o => !sel.includes(o.id));
+              doc.objects = [...list, ...keep]; save(); requestDraw(); }],
+    '-',
+    ['lock',  (one.locked ? '🔓  Unlock' : '🔒  Lock'),
+              () => { snapshot(); list.forEach(o => o.locked = !one.locked);
+                      sel = []; refreshInspector(); save(); requestDraw(); }],
+    ['hide',  (one.hidden ? '👁  Show' : '🚫  Hide'),
+              () => { snapshot(); list.forEach(o => o.hidden = !one.hidden);
+                      sel = []; refreshInspector(); save(); requestDraw(); }],
+    ['group', (list.length > 1 ? '🔗  Group' : '🔗  Ungroup'),
+              () => list.length > 1 ? groupSel() : ungroupSel()],
+    '-',
+    ['del',   '🗑  Delete',      () => { snapshot(); removeObjects(sel); sel = [];
+                                         refreshInspector(); save(); requestDraw(); }]
+  ]);
+});
+
 /* ============================ SETTINGS ============================
    Sab kuch ek jagah, taaki key dhoondhne ke liye gallery ke andar na jaana pade. */
 function pill(on, yes, no){ return `<span class="spill ${on?'ok':'no'}">${on ? yes : no}</span>`; }
@@ -7776,6 +7955,7 @@ window.addEventListener('appinstalled', () => { $('installBtn').style.display = 
 
 /* ----------------------------- BOOT ----------------------------- */
 /* Storage ab async hai (IndexedDB), isliye boot ek async sequence hai. */
+let bootDone = false;                        // tests aur boot-time races ke liye
 (async function main(){
   resize();
   buildStickerPop();
@@ -7794,10 +7974,12 @@ window.addEventListener('appinstalled', () => { $('installBtn').style.display = 
   applyGrid();
   updateZoomLabel(); updateHistBtns(); setTool('select');
   armTooltips();                               // sab native title hata do
+  fitTopBar();
   setSaveState('ok');
   if(document.fonts?.ready) document.fonts.ready.then(checkFonts);
   else checkFonts();
   bootIntro();
+  bootDone = true;
 })();
 
 /* Splash chalne ke dauraan camera thoda peeche rehta hai aur phir apni jagah
