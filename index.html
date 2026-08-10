@@ -790,6 +790,38 @@
   <button class="tbtn" data-pri="3" data-ico="🎥" id="recMode" title="What gets recorded">🎥 Board</button>
   <button class="tbtn" data-pri="3" data-ico="📸" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
   <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
+  <button class="tbtn blue" data-pri="1" data-ico="🧱" id="galBtn" title="Drag-and-drop block gallery">🧱 Gallery</button>
+  <button class="tbtn" data-pri="1" data-ico="✍️" id="scriptBtn" title="Turn a written script into a board">✍️ Script</button>
+  <button class="tbtn" data-pri="1" data-ico="🗺️" id="flowBtn">🗺️ Flow</button>
+  <button class="tbtn" data-pri="1" data-ico="🗂" id="layersBtn" title="Layers — L · board ki saari cheezein ek list me">🗂 Layers</button>
+  <div class="spacer"></div>
+  <button class="savest shotbtn" id="shotState" title="Jump to the next screen waiting for a screenshot" style="display:none">📸 0</button>
+  <button class="savest qbtn" id="qState" title="Rendering was eased off — click to force full quality" style="display:none">⚡ Quality</button>
+  <span class="savest" id="saveState">Saved ✓</span>
+  <button class="tbtn" id="undoBtn" title="Undo (Ctrl+Z)">↶</button>
+  <button class="tbtn" id="redoBtn" title="Redo (Ctrl+Shift+Z)">↷</button>
+  <div class="divider"></div>
+  <button class="tbtn" data-pri="2" data-ico="📄" id="scriptPanelBtn" title="Open your script beside the board (\\)">📄 Script</button>
+  <button class="tbtn rec" data-pri="2" data-ico="⏺" id="recBtn" title="Start / stop recording">⏺ Record</button>
+  <button class="tbtn" data-pri="3" data-ico="🎥" id="recMode" title="What gets recorded">🎥 Board</button>
+  <button class="tbtn" data-pri="3" data-ico="📸" id="snapBtn" title="Save a PNG of exactly what you see right now">📸 Snap</button>
+  <button class="tbtn" data-pri="3" data-ico="⚙" id="setBtn" title="Settings — API keys, defaults, backup">⚙</button>
   <button class="tbtn blue" data-pri="3" data-ico="⬇︎" id="installBtn" title="Install — app ki tarah lag jayega, offline bhi chalega" style="display:none">⬇︎ Install</button>
   <button class="tbtn" data-pri="2" data-ico="↻" id="updBtn" title="Naya version aa gaya — dabao to lag jayega" style="display:none">↻ Update</button>
   <button class="tbtn" data-pri="4" data-ico="?" id="helpBtn" title="Shortcuts (?)">?</button>
@@ -1108,6 +1140,10 @@
         <h5>Canvas</h5>
         <div class="hrow"><span>Pan</span><kbd>Space drag</kbd></div>
         <div class="hrow"><span>Zoom</span><kbd>Ctrl wheel</kbd></div>
+        <div class="hrow"><span>Side me sarko</span><kbd>⇧ wheel</kbd></div>
+        <div class="hrow"><span>Middle-click drag</span><kbd>pan</kbd></div>
+        <div class="hrow"><span>Right-click</span><kbd>menu</kbd></div>
+        <div class="hrow"><span>Khaali jagah 2× click</span><kbd>naya text</kbd></div>
         <div class="hrow"><span>Zoom to fit</span><kbd>⇧ 1</kbd></div>
         <div class="hrow"><span>100% zoom</span><kbd>⇧ 0</kbd></div>
         <div class="hrow"><span>Dot grid</span><kbd>D</kbd></div>
@@ -1188,6 +1224,7 @@ let toolBeforePresent = 'select';
 let frameMode = 0;                        // 0 = off, 1 = 16:9, 2 = 9:16 (Shorts)
 let clipboard = null;                     // Ctrl+C / Ctrl+V buffer
 let showGrid = true;                      // Freeform-style dot grid, default ON
+let wheelMode = 'pan';                    // 'pan' (Figma/Miro jaisa) ya 'zoom'
 let spotlight = false;                    // present: purane steps dim
 let snapOn = true;                        // move ke waqt alignment snapping
 let snapGuides = [];                      // is frame ki guide lines (world coords)
@@ -1597,7 +1634,7 @@ async function doSave(){
     localStorage.setItem(LS_INDEX, JSON.stringify(boards));
     localStorage.setItem(LS_SET, JSON.stringify({
       theme, active:doc.id, brushColor, brushSize, showGrid, snapOn,
-      autoSecs:+$('pSecs').value || 6, defaultAnim, animMs, animStagger }));
+      autoSecs:+$('pSecs').value || 6, defaultAnim, animMs, animStagger, wheelMode }));
     storageWarned = false;
     setSaveState('ok');
   }catch(err){
@@ -1641,6 +1678,7 @@ async function loadAll(){
     if(s.defaultAnim && ANIMS[s.defaultAnim]) defaultAnim = s.defaultAnim;
     if(s.animMs) animMs = clamp(+s.animMs, 80, 3000);
     if(typeof s.animStagger === 'number') animStagger = clamp(s.animStagger, 0, 900);
+    if(s.wheelMode === 'zoom' || s.wheelMode === 'pan') wheelMode = s.wheelMode;
     if(s.autoSecs) $('pSecs').value = s.autoSecs;
     boards = JSON.parse(localStorage.getItem(LS_INDEX) || '[]');
     active = s.active;
@@ -3532,6 +3570,7 @@ cvs.addEventListener('pointerdown', e => {
 
 cvs.addEventListener('pointermove', e => {
   if(pointers.has(e.pointerId)) pointers.set(e.pointerId, { x:e.clientX, y:e.clientY });
+  if(!mode && !present && tool === 'select' && !cropping) hoverCursor(e);
 
   if(mode === 'pinch' && pointers.size >= 2){
     const [a,b] = [...pointers.values()];
@@ -3645,6 +3684,23 @@ cvs.addEventListener('pointermove', e => {
   }
 });
 
+/* Mouse se kaam karte waqt cursor hi batata hai ki kya ho sakta hai —
+   khisak sakta hai, naap badal sakta hai, ya kuch nahi. */
+let lastCur = '';
+function hoverCursor(e){
+  const w = toWorld(e.clientX, e.clientY);
+  let cur = 'default';
+  const u = unionBox(selObjs());
+  if(u){
+    const hs = 12/cam.z, cs = corners(u);
+    for(let i=0;i<cs.length;i++)
+      if(Math.abs(w.x-cs[i][0]) < hs && Math.abs(w.y-cs[i][1]) < hs)
+        cur = (i === 0 || i === 3) ? 'nwse-resize' : 'nesw-resize';
+  }
+  if(cur === 'default' && hitTest(w.x, w.y)) cur = 'move';
+  if(cur !== lastCur){ lastCur = cur; cvs.style.cursor = cur; }
+}
+
 function endPointer(e){
   pointers.delete(e.pointerId);
   if(mode === 'pinch'){ if(pointers.size < 2){ mode = null; save(); } return; }
@@ -3754,11 +3810,17 @@ cvs.addEventListener('wheel', e => {
     const dev = cropObj();
     if(dev){ nudgeCrop(dev, -e.deltaY*0.002, 0, 0); return; }
   }
-  if(e.ctrlKey || e.metaKey){
+  // Desktop mouse me sirf oopar-neeche wala wheel hota hai. Pehle side me
+  // sarakne ka koi tareeka hi nahi tha — ab Shift+wheel. Aur jo log wheel se
+  // zoom karne ke aadi hain wo Settings se badal sakte hain.
+  const wantZoom = (wheelMode === 'zoom') !== (e.ctrlKey || e.metaKey);
+  if(wantZoom){
     const w = toWorld(e.clientX, e.clientY);
     cam.z = clamp(cam.z * Math.exp(-e.deltaY*0.0025), 0.06, 12);
     const after = toWorld(e.clientX, e.clientY);
     cam.x += w.x - after.x; cam.y += w.y - after.y;
+  } else if(e.shiftKey && !e.deltaX){
+    cam.x += e.deltaY/cam.z;                   // Shift = side me
   } else {
     cam.x += e.deltaX/cam.z; cam.y += e.deltaY/cam.z;
   }
@@ -4378,7 +4440,13 @@ function bindInspector(list){
 cvs.addEventListener('dblclick', e => {
   const w = toWorld(e.clientX, e.clientY);
   const o = hitTest(w.x, w.y);
-  if(!o) return;
+  // khaali jagah pe double-click = wahin naya text, aur seedha likhne layak
+  if(!o){
+    if(present || tool !== 'select') return;
+    const t = createBlock('text', w.x, w.y - 20);
+    if(t) setTimeout(() => inlineEdit(t), 20);
+    return;
+  }
   if(canCrop(o)){ startCrop(o); return; }
   if(o.type === 'text' || o.type === 'note' || o.type === 'code') inlineEdit(o);
   else if(o.type === 'card'){ sel = [o.id]; refreshInspector();
@@ -7037,6 +7105,10 @@ document.addEventListener('keydown', e => {
     const b = $('insp').querySelector('[data-act="dup"]'); b?.click(); return; }
   if((e.ctrlKey || e.metaKey) && k === 'a'){ e.preventDefault(); sel = objects().filter(pickable).map(o => o.id);
     refreshInspector(); requestDraw(); return; }
+  // Log aadat se Ctrl+S dabate hain. Bina roke browser ka "Save page" dialog
+  // khul jaata tha — dikhne me lagta ki app ne kuch bigaad diya.
+  if((e.ctrlKey || e.metaKey) && k === 's'){
+    e.preventDefault(); flushSave(); toast('Saved ✓ — waise ye apne aap hota rehta hai'); return; }
   if((e.ctrlKey || e.metaKey) && k === 'f'){ e.preventDefault(); openFind(true); return; }
   if((e.ctrlKey || e.metaKey) && k === 'g'){ e.preventDefault(); e.shiftKey ? ungroupSel() : groupSel(); return; }
   if((e.ctrlKey || e.metaKey) && (k === '=' || k === '+')){ e.preventDefault(); zoomBy(1.25); return; }
@@ -7047,6 +7119,16 @@ document.addEventListener('keydown', e => {
     if(sel.length){ e.preventDefault(); snapshot();
       removeObjects(sel); sel = [];
       refreshInspector(); save(); requestDraw(); }
+    return;
+  }
+  if(e.key === 'Tab'){
+    e.preventDefault();
+    const list = readingOrder(objects().filter(pickable));
+    if(!list.length) return;
+    const at = list.findIndex(o => sel.includes(o.id));
+    const next = list[(at + (e.shiftKey ? -1 : 1) + list.length) % list.length];
+    sel = expandSelection([next.id]);
+    refreshInspector(); fitTo([next], true);
     return;
   }
   if(e.key === 'Escape'){
@@ -7363,6 +7445,10 @@ function renderSettings(){
       <div class="sright"><button class="ib" id="sGrid" style="flex:0 0 auto">${showGrid?'On':'Off'}</button></div></div>
     <div class="srow"><div class="sleft"><b>Snapping</b><span>Drag karte waqt align guides.</span></div>
       <div class="sright"><button class="ib" id="sSnap" style="flex:0 0 auto">${snapOn?'On':'Off'}</button></div></div>
+    <div class="srow"><div class="sleft"><b>Mouse wheel</b>
+      <span>Pan = Figma/Miro jaisa (Ctrl+wheel se zoom). Zoom = seedha zoom (Ctrl se pan).
+        Shift+wheel dono me side me le jaata hai.</span></div>
+      <div class="sright"><button class="ib" id="sWheel" style="flex:0 0 auto">${wheelMode === 'zoom' ? 'Zoom' : 'Pan'}</button></div></div>
 
     <div class="sect">💾 Storage</div>
     <div class="srow"><div class="sleft"><b>${boards.length} board${boards.length===1?'':'s'}</b>
@@ -7395,6 +7481,8 @@ function renderSettings(){
   on('sImpKeys', () => $('keyPick').click());
   on('sGrid', () => { toggleGrid(); renderSettings(); });
   on('sSnap', () => { snapOn = !snapOn; save(); renderSettings(); toast(snapOn?'Snapping on':'Snapping off'); });
+  on('sWheel', () => { wheelMode = wheelMode === 'zoom' ? 'pan' : 'zoom'; save(); renderSettings();
+                       toast(wheelMode === 'zoom' ? 'Wheel ab zoom karega' : 'Wheel ab pan karega'); });
   on('sBackup', backupAllBoards);
   const sa = $('sAnim'); if(sa) sa.addEventListener('change', () => { defaultAnim = sa.value; save(); });
   const sm = $('sAnimMs'); if(sm) sm.addEventListener('change', () => { animMs = clamp(+sm.value||420, 80, 3000); save(); });

@@ -415,6 +415,82 @@ T('clear board: poochta hai, undo sab laata hai', () => {
   if(!S.doc.views[1] || S.doc.stepNotes[1] !== 'kuch') throw new Error('views/notes wapas nahi aaye');
 });
 
+/* ------------------------ keyboard + mouse ------------------------ */
+T('wheel: pan, Ctrl se zoom, Shift se side me', () => {
+  const wheels = listeners.filter(l => l.type === 'wheel');
+  if(!wheels.length) throw new Error('wheel handler hi nahi');
+  const ev = o => Object.assign({ deltaX:0, deltaY:0, clientX:800, clientY:450,
+                                  ctrlKey:false, metaKey:false, shiftKey:false,
+                                  preventDefault(){} }, o);
+  const fire = o => { for(const l of wheels) l.fn(ev(o)); };
+  const snap = () => ({ x:S.cam.x, y:S.cam.y, z:S.cam.z });
+
+  let a = snap(); fire({ deltaY:100 });
+  let b = snap();
+  if(b.y <= a.y) throw new Error('plain wheel se neeche nahi gaya');
+  if(Math.abs(b.z - a.z) > 1e-9) throw new Error('plain wheel se zoom ho gaya');
+
+  a = snap(); fire({ deltaY:100, ctrlKey:true });
+  b = snap();
+  if(Math.abs(b.z - a.z) < 1e-9) throw new Error('Ctrl+wheel se zoom nahi hua');
+
+  a = snap(); fire({ deltaY:100, shiftKey:true });
+  b = snap();
+  if(Math.abs(b.x - a.x) < 1e-9) throw new Error('Shift+wheel se side me nahi gaya');
+  if(Math.abs(b.y - a.y) > 1e-9) throw new Error('Shift+wheel ne oopar-neeche bhi hila diya');
+});
+
+T('Ctrl+S browser ka dialog rok deta hai', () => {
+  let stopped = false;
+  const keys = listeners.filter(l => l.type === 'keydown');
+  for(const l of keys) l.fn({ key:'s', code:'KeyS', ctrlKey:true, metaKey:false, shiftKey:false,
+    preventDefault(){ stopped = true; }, stopPropagation(){}, target:{} });
+  if(!stopped) throw new Error('preventDefault nahi hua — browser ka Save page khul jayega');
+});
+
+T('Tab se ek-ek cheez pe jaate hain', () => {
+  S.doc.objects = [];
+  for(let i=0;i<3;i++) S.objects().push(S.mkCard(i*500, 0, '✨', 'C'+i, 'x', 1));
+  S.sel = [];
+  const keys = listeners.filter(l => l.type === 'keydown');
+  const tab = sh => { for(const l of keys) l.fn({ key:'Tab', code:'Tab', shiftKey:!!sh,
+    ctrlKey:false, metaKey:false, preventDefault(){}, stopPropagation(){}, target:{} }); };
+  tab(); const first = S.sel[0];
+  if(!first) throw new Error('Tab se kuch select nahi hua');
+  tab(); if(S.sel[0] === first) throw new Error('Tab se aage nahi badha');
+  tab(true); if(S.sel[0] !== first) throw new Error('Shift+Tab se peeche nahi aaya');
+  // locked / hidden skip hone chahiye
+  S.objects()[1].locked = true;
+  S.sel = []; tab(); tab();
+  if(S.sel[0] === S.objects()[1].id) throw new Error('locked cheez pe Tab ruk gaya');
+  S.objects()[1].locked = false;
+});
+
+T('hover pe cursor badalta hai', () => {
+  S.doc.objects = [];
+  const c = S.mkCard(0, 0, '✨', 'a', 'b', 1);
+  S.objects().push(c);
+  const b = S.bbox(c);
+  const cur = () => elById.stage.style.cursor;
+  S.hoverCursor({ clientX:5, clientY:5 });
+  const away = cur();
+  // object ke oopar — screen coords chahiye, isliye world se badalte hain
+  const p = S.toScreen(b.x + b.w/2, b.y + b.h/2);
+  S.hoverCursor({ clientX:p.x, clientY:p.y });
+  if(cur() !== 'move') throw new Error('object ke upar cursor "' + cur() + '", chahiye "move"');
+  S.hoverCursor({ clientX:5, clientY:5 });
+  if(cur() === 'move') throw new Error('khaali jagah pe bhi move cursor');
+});
+
+T('khaali jagah 2x click = naya text', () => {
+  S.doc.objects = [];
+  const dbl = listeners.filter(l => l.type === 'dblclick');
+  if(!dbl.length) throw new Error('dblclick handler nahi');
+  for(const l of dbl) l.fn({ clientX:400, clientY:300 });
+  const t = S.objects().find(o => o.type === 'text');
+  if(!t) throw new Error('naya text nahi bana');
+});
+
 /* --------------------------- practical use --------------------------- */
 T('find: board pe text dhoondhta hai', () => {
   S.doc.objects = [];

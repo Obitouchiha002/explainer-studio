@@ -41,6 +41,7 @@ const BRIDGE = `
   get showGrid(){return showGrid}, set showGrid(v){showGrid=v},
   get livePath(){return livePath}, get mode(){return mode},
   get bootDone(){return bootDone},
+  get wheelMode(){return wheelMode}, set wheelMode(v){wheelMode=v},
   get findHits(){return findHits}, get findAt(){return findAt},
   get editsSinceBackup(){return editsSinceBackup},
   set doc(v){doc=v},
