@@ -57,7 +57,7 @@
     box-shadow:var(--shadow), inset 0 1px 0 var(--glass-hi);
   }
   .top,.dock,.brush,.zoom,.insp,.galp,.layp,.flowp,.animp,.pop,.ctxbar,.findbar,
-  .pdock,.pctl,.spanel,.helpbox,.startp{ border:1px solid var(--line); }
+  .pdock,.pctl,.spanel,.helpbox{ border:1px solid var(--line); }
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html,body{height:100%;overflow:hidden;}
   body{background:var(--bg);color:var(--ink);font-family:'Mukta',system-ui,sans-serif;
@@ -481,20 +481,55 @@
   @keyframes pvNone{0%,100%{opacity:1}}
 
   /* ---------------- START PANEL ---------------- */
-  .startp{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:46;display:none;
-    width:min(560px,calc(100vw - 40px));padding:26px;border-radius:22px;
-    background:var(--panel-solid);border:1px solid var(--line);box-shadow:0 30px 80px rgba(0,0,0,.28);}
-  .startp.on{display:block;}
-  .startp h3{font-family:'Baloo 2',system-ui,sans-serif;font-size:22px;margin-bottom:16px;}
-  .srow2{display:flex;flex-direction:column;gap:9px;}
-  .srow2 button{text-align:left;padding:14px 16px;border-radius:14px;background:var(--panel2);
+  /* App seedha studio me nahi khulti. Pehle ye — naam, naap, board. Ek baar
+     poochte hain, phir kaam shuru. */
+  .startp{position:fixed;inset:0;z-index:47;display:none;align-items:center;justify-content:center;
+    background:var(--bg);padding:20px;overflow-y:auto;}
+  .startp.on{display:flex;}
+  .stbox{width:min(520px,100%);}
+  .stlogo{font-family:'Anton',system-ui,sans-serif;font-size:19px;letter-spacing:.7px;
+          color:var(--muted);margin-bottom:18px;}
+  .stlogo .y{color:var(--yellow);}
+  .startp h3{font-family:'Baloo 2',system-ui,sans-serif;font-size:28px;margin-bottom:4px;}
+  .sthint{font-size:13.5px;color:var(--muted);margin-bottom:22px;}
+  .stfld{margin-bottom:18px;}
+  .stfld label{display:block;font-size:10.5px;letter-spacing:1px;text-transform:uppercase;
+    color:var(--muted);font-weight:800;margin-bottom:8px;}
+  .stfld input{width:100%;background:var(--panel2);border:1.5px solid var(--edge);
+    border-radius:12px;padding:12px 14px;font-size:15px;outline:none;}
+  .stfld input:focus{border-color:var(--blue);box-shadow:0 0 0 3px var(--blue-soft);}
+  .stopts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;}
+  .stopts button{text-align:left;padding:11px 13px;border-radius:12px;background:var(--panel2);
     border:1.5px solid var(--line);transition:.13s;}
-  .srow2 button:hover{border-color:var(--blue);transform:translateY(-1px);}
-  .srow2 b{display:block;font-size:15px;font-weight:800;margin-bottom:3px;}
-  .srow2 span{display:block;font-size:12.5px;color:var(--muted);line-height:1.45;}
-  .startp .skip{display:block;margin:14px auto 0;font-size:12.5px;color:var(--muted);
-    padding:6px 12px;border-radius:9px;}
+  .stopts button:hover{border-color:var(--edge);}
+  .stopts button.on{border-color:var(--blue);background:var(--blue-soft);}
+  .stopts b{display:block;font-size:13.5px;font-weight:800;}
+  .stopts span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px;}
+  .stgo{width:100%;padding:14px;border-radius:14px;background:var(--yellow);color:#0A0E1A;
+    font-size:16px;font-weight:800;transition:.14s;margin-top:4px;}
+  .stgo:hover{filter:brightness(1.06);}
+  .startp .skip{display:block;margin:12px auto 0;font-size:12.5px;color:var(--muted);
+    padding:8px 12px;border-radius:9px;}
   .startp .skip:hover{background:var(--panel2);color:var(--ink);}
+
+  /* ---------------- TUTORIAL ---------------- */
+  .tut{position:fixed;inset:0;z-index:64;display:none;}
+  .tut.on{display:block;}
+  /* Poori screen dim, sirf ek cheez roshni me — bade box-shadow se hi ho jaata
+     hai, kisi mask ya SVG ki zaroorat nahi. */
+  .tutspot{position:absolute;border-radius:16px;transition:.28s cubic-bezier(.2,.8,.2,1);
+    box-shadow:0 0 0 9999px rgba(6,10,20,.68), 0 0 0 3px var(--yellow);pointer-events:none;}
+  .tutcard{position:absolute;width:min(320px,calc(100vw - 32px));padding:16px 18px;
+    border-radius:18px;background:var(--panel-solid);border:1px solid var(--line);
+    box-shadow:var(--shadow);transition:.28s cubic-bezier(.2,.8,.2,1);}
+  .tutn{font-size:11px;font-weight:800;color:var(--yellow);letter-spacing:1px;}
+  .tutcard h4{font-family:'Baloo 2',system-ui,sans-serif;font-size:17px;margin:5px 0 6px;}
+  .tutcard p{font-size:13.5px;color:var(--sub);line-height:1.6;}
+  .tutb{display:flex;align-items:center;gap:7px;margin-top:14px;}
+  .tutb .ib{flex:0 0 auto;min-width:0;padding:8px 13px;}
+  .tutb .tutnext{background:var(--yellow);color:#0A0E1A;border-color:var(--yellow);}
+  .tutb .skip{font-size:12.5px;color:var(--muted);padding:8px 10px;border-radius:9px;}
+  .tutb .skip:hover{background:var(--panel2);color:var(--ink);}
 
   /* ---------------- MODES ---------------- */
   .modes{display:flex;gap:3px;padding:3px;border-radius:12px;background:var(--panel2);
@@ -781,7 +816,7 @@
   body.mob.landscape .insp::before,body.mob.landscape .galp::before,
   body.mob.landscape .layp::before,body.mob.landscape .flowp::before,
   body.mob.landscape .animp::before{display:none;}
-  body.mob.landscape .helpbox,body.mob.landscape .startp{max-height:88vh;}
+  body.mob.landscape .helpbox{max-height:88vh;}
   body.mob.landscape.sheet-open .dock{display:flex !important;}   /* rail bachi rehti hai */
 
   /* ==================== MOBILE ====================
@@ -834,9 +869,10 @@
     .helpbox{width:100%;max-height:92vh;border-radius:22px 22px 0 0;
              padding-bottom:calc(20px + env(safe-area-inset-bottom));}
     .hcols{grid-template-columns:1fr;}
-    .startp{width:100%;left:0;top:auto;bottom:0;transform:none;
-            border-radius:22px 22px 0 0;
-            padding-bottom:calc(26px + env(safe-area-inset-bottom));}
+    .startp{align-items:flex-start;
+            padding:calc(18px + env(safe-area-inset-top)) 16px
+                    calc(24px + env(safe-area-inset-bottom));}
+    .startp h3{font-size:23px;}
     .spanel{left:0 !important;right:0 !important;width:100% !important;
             top:auto !important;bottom:0 !important;height:60vh !important;
             border-radius:22px 22px 0 0;}
@@ -861,16 +897,62 @@
 </div>
 
 <div class="startp" id="startp">
-  <h3>Kya karna hai?</h3>
-  <div class="srow2">
-    <button data-start="script"><b>✍️ Meri script se board banao</b>
-      <span>Script paste karo — cards, steps, notes sab apne aap</span></button>
-    <button data-start="blank"><b>✏️ Khaali board pe likhna hai</b>
-      <span>Chalk aur pen ke saath saada board</span></button>
-    <button data-start="demo"><b>👀 Pehle demo dekh loon</b>
-      <span>Bana hua example — usi ko badal kar seekh lo</span></button>
+  <div class="stbox">
+    <div class="stlogo">TECH BY <span class="y">VANSH</span></div>
+    <h3>Naya project</h3>
+    <p class="sthint">Naam aur naap chun lo — baad me bhi badal sakte ho.</p>
+
+    <div class="stfld">
+      <label>Project ka naam</label>
+      <input id="stName" placeholder="jaise: Vibe Coding — Part 1" spellcheck="false">
+    </div>
+
+    <div class="stfld">
+      <label>Screen ka naap</label>
+      <div class="stopts" id="stSize">
+        <button class="on" data-size="16:9"><b>16:9</b><span>YouTube video</span></button>
+        <button data-size="9:16"><b>9:16</b><span>Shorts / Reels</span></button>
+        <button data-size="free"><b>Free</b><span>Bina hadd ke board</span></button>
+      </div>
+    </div>
+
+    <div class="stfld">
+      <label>Board</label>
+      <div class="stopts" id="stSurf">
+        <button class="on" data-surf="white"><b>⬜ Whiteboard</b><span>Dots ke saath</span></button>
+        <button data-surf="green"><b>🟩 Green board</b><span>Chalk wala</span></button>
+        <button data-surf="black"><b>⬛ Blackboard</b><span>Chalk wala</span></button>
+        <button data-surf="paper"><b>📒 Copy</b><span>Lakeeron wali</span></button>
+      </div>
+    </div>
+
+    <div class="stfld">
+      <label>Shuru kahan se</label>
+      <div class="stopts" id="stFrom">
+        <button class="on" data-from="blank"><b>Khaali board</b><span>Seedha likhna shuru</span></button>
+        <button data-from="script"><b>Meri script se</b><span>Script paste karo, board ban jaayega</span></button>
+        <button data-from="demo"><b>Demo dekho</b><span>Bana hua example</span></button>
+      </div>
+    </div>
+
+    <button class="stgo" id="stGo">Start ▸</button>
+    <button class="skip" id="startSkip">Abhi jo khula hai wahi theek hai</button>
   </div>
-  <button class="skip" id="startSkip">Baad me</button>
+</div>
+
+<div class="tut" id="tut">
+  <div class="tutspot" id="tutSpot"></div>
+  <div class="tutcard" id="tutCard">
+    <span class="tutn" id="tutN">1 / 8</span>
+    <h4 id="tutT"></h4>
+    <p id="tutP"></p>
+    <div class="tutb">
+      <button class="skip" id="tutSkip">Skip</button>
+      <span style="flex:1"></span>
+      <button class="ib" id="tutBack">← Back</button>
+      <button class="ib tutnext" id="tutNext">Next →</button>
+    </div>
+  </div>
 </div>
 
 <div class="hint" id="hint">
@@ -7538,36 +7620,146 @@ async function importKeys(file){
   }
 }
 
-/* ============================ START PANEL ============================
-   Pehli baar app khulne par ek naya banda demo board dekhta hai aur samajh hi
-   nahi paata ki shuru kahan se karein. Ye ek baar poochta hai — teen seedhe
-   raste — aur phir kabhi nahi aata. */
+/* ============================ START / PROJECT ============================
+   App seedha studio me nahi khulti. Pehle naam, naap aur board poochte hain —
+   ek baar. Uske baad naye banda ke liye tutorial. */
 const LS_SEEN = 'tbv_studio_seen';
+let stPick = { size:'16:9', surf:'white', from:'blank' };
+
 function openStart(on){
   const show = on === undefined ? !$('startp').classList.contains('on') : on;
   $('startp').classList.toggle('on', show);
+  if(show) setTimeout(() => $('stName').focus(), 60);
 }
 function doneStart(){
   try{ localStorage.setItem(LS_SEEN, '1'); }catch(err){}
   openStart(false);
 }
-document.querySelectorAll('[data-start]').forEach(b => b.addEventListener('click', () => {
-  const w = b.dataset.start;
-  doneStart();
-  if(w === 'script'){ setMode('plan'); toggleScript(true); }
-  else if(w === 'blank'){
-    setMode('write');
-    newBoard('Mera board', true);
-    setSurface('green');
-    setTool('chalk');
-    toast('Khaali board — chalk se likho');
-  } else {
-    setMode('write');
-    fitTo(objects(), true);
-    toast('Ye ek example hai — ise badal kar dekho, ya Boards ▾ se naya banao');
+/* teen groups, teenon ek jaise chalte hain */
+const ST_GROUPS = { stSize:'size', stSurf:'surf', stFrom:'from' };
+function pickStart(key, val){
+  stPick[key] = val;
+  for(const [id, k] of Object.entries(ST_GROUPS)){
+    if(k !== key || !$(id)) continue;
+    $(id).querySelectorAll('button').forEach(x =>
+      x.classList.toggle('on', (x.dataset.size || x.dataset.surf || x.dataset.from) === val));
   }
-}));
-$('startSkip').addEventListener('click', doneStart);
+}
+for(const [id, key] of Object.entries(ST_GROUPS)){
+  const host = $(id);
+  if(!host) continue;
+  host.querySelectorAll('button').forEach(b => b.addEventListener('click', () =>
+    pickStart(key, b.dataset.size || b.dataset.surf || b.dataset.from)));
+}
+$('stName').addEventListener('keydown', e => {
+  e.stopPropagation();
+  if(e.key === 'Enter') $('stGo').click();
+});
+
+$('stGo').addEventListener('click', async () => {
+  const name = ($('stName').value || '').trim() || 'Mera project';
+  doneStart();
+
+  if(stPick.from !== 'demo'){
+    newBoard(name, true);
+    setSurface(stPick.surf);
+  } else {
+    setSurface(stPick.surf);
+  }
+  // naap = safe frame, taaki shuru se hi pata rahe ki video me kitna aayega
+  frameMode = stPick.size === '16:9' ? 1 : stPick.size === '9:16' ? 2 : 0;
+  $('frameBtn').textContent = '🎬 ' + FRAME_NAMES[frameMode];
+  $('frameBtn').classList.toggle('blue', frameMode !== 0);
+
+  if(stPick.from === 'script'){ setMode('plan'); toggleScript(true); }
+  else if(stPick.from === 'demo'){ setMode('write'); fitTo(objects(), true); }
+  else { setMode('write'); setTool(chalkBoard() ? 'chalk' : 'pen'); }
+
+  save(); requestDraw();
+  setTimeout(() => startTutorial(), 500);      // pehli baar hi
+});
+$('startSkip').addEventListener('click', () => { doneStart(); startTutorial(); });
+
+/* ============================== TUTORIAL ==============================
+   Naye banda ko ek-ek cheez dikhate hain. Har step apna mode khud laga leta
+   hai, warna jis button ki baat ho rahi hai wo screen pe hota hi nahi. */
+const LS_TUT = 'tbv_studio_tut';
+const TUT = [
+  { el:'modes', mode:'write', t:'Chaar hisse',
+    p:'Sab kuch ek saath nahi — har kaam ka apna hissa. Write me likho, Build me cards aur mockups banao, Script se poora board bana lo, Record me video.' },
+  { el:'dock', mode:'write', t:'Yahan se tool uthao',
+    p:'Pen, chalk, duster, text. Chalk aur duster hare/kaale board pe asli class jaisa lagta hai.' },
+  { el:'surfBtn', mode:'write', t:'Board badlo',
+    p:'Whiteboard, hara board, blackboard ya copy. Chalk wale board pe likhawat apne aap chalk jaisi ho jaati hai.' },
+  { el:'scriptBtn', mode:'plan', t:'Script se board',
+    p:'Apni script paste karo — cards, steps, notes sab apne aap ban jaate hain. AI se bhi likhwa sakte ho.' },
+  { el:'galBtn', mode:'build', t:'Gallery',
+    p:'Bane-banaye blocks — cards, flows, laptop/phone mockups, brand logos, Subscribe button. Board pe kheench kar chhod do.' },
+  { el:'presentBtn', mode:'write', t:'Present',
+    p:'Space se ek-ek step khulta hai, camera apne aap us jagah jaata hai, aur aapke notes sirf aapko dikhte hain.' },
+  { el:'recBtn', mode:'present', t:'Record',
+    p:'Seedha yahin se video banti hai — sirf board record hota hai, ye toolbar nahi. 3-2-1 ke baad shuru.' },
+  { el:'scratchBtn', mode:'write', t:'Scratch board',
+    p:'Beech me kuch likh kar samjhana ho? Ek khaali board turant khulta hai, aur wahi button wapas le aata hai.' },
+  { el:'helpBtn', mode:'write', t:'Bas itna hi',
+    p:'Aur kuch bhoolo to ? dabao — poori list wahin hai. Shubhkamnayein!' }
+];
+let tutAt = -1;
+
+function startTutorial(force){
+  let done = false;
+  try{ done = localStorage.getItem(LS_TUT) === '1'; }catch(err){}
+  if(done && !force) return;
+  tutAt = 0;
+  $('tut').classList.add('on');
+  showTutStep();
+}
+function endTutorial(){
+  $('tut').classList.remove('on');
+  tutAt = -1;
+  try{ localStorage.setItem(LS_TUT, '1'); }catch(err){}
+}
+function showTutStep(){
+  const st = TUT[tutAt];
+  if(!st) return endTutorial();
+  if(st.mode && uiMode !== st.mode) setMode(st.mode);
+
+  const el = $(st.el);
+  const spot = $('tutSpot'), card = $('tutCard');
+  $('tutN').textContent = (tutAt + 1) + ' / ' + TUT.length;
+  $('tutT').textContent = st.t;
+  $('tutP').textContent = st.p;
+  $('tutBack').style.display = tutAt ? '' : 'none';
+  $('tutNext').textContent = tutAt === TUT.length - 1 ? 'Ho gaya ✓' : 'Next →';
+
+  // element ab dikh raha hai? mode badalne ke baad thoda ruk kar naapo
+  setTimeout(() => {
+    const r = el && el.getBoundingClientRect ? el.getBoundingClientRect() : null;
+    if(!r || (!r.width && !r.height)){
+      // kahin nahi mila — card ko beech me rakh do, spotlight chhupa do
+      spot.style.width = '0px'; spot.style.height = '0px';
+      card.style.left = Math.max(12, (window.innerWidth - card.offsetWidth)/2) + 'px';
+      card.style.top = Math.max(12, (window.innerHeight - card.offsetHeight)/2) + 'px';
+      return;
+    }
+    const pad = 8;
+    spot.style.left = (r.left - pad) + 'px';
+    spot.style.top = (r.top - pad) + 'px';
+    spot.style.width = (r.width + pad*2) + 'px';
+    spot.style.height = (r.height + pad*2) + 'px';
+
+    const cw = card.offsetWidth || 320, ch = card.offsetHeight || 150;
+    let top = r.bottom + 16;
+    if(top + ch > window.innerHeight - 12) top = r.top - ch - 16;   // upar jagah ho to upar
+    card.style.top = clamp(top, 12, Math.max(12, window.innerHeight - ch - 12)) + 'px';
+    card.style.left = clamp(r.left + r.width/2 - cw/2, 12,
+                            Math.max(12, window.innerWidth - cw - 12)) + 'px';
+  }, st.mode ? 90 : 0);
+}
+$('tutNext').addEventListener('click', () => { tutAt++; showTutStep(); });
+$('tutBack').addEventListener('click', () => { tutAt = Math.max(0, tutAt - 1); showTutStep(); });
+$('tutSkip').addEventListener('click', endTutorial);
+window.addEventListener('resize', () => { if(tutAt >= 0) showTutStep(); });
 
 /* ============================ SCRATCH BOARD ============================
    Beech me kuch samjhana ho — ek chhoti si cheez likh kar dikhani ho — to
@@ -7987,7 +8179,9 @@ function renderSettings(){
       <div class="sright"><button class="ib" id="sSnap" style="flex:0 0 auto">${snapOn?'On':'Off'}</button></div></div>
     <div class="srow"><div class="sleft"><b>Shuruaat wala panel</b>
       <span>Wo teen sawaal wala panel jo pehli baar aata hai.</span></div>
-      <div class="sright"><button class="ib" id="sStart" style="flex:0 0 auto">Dobara dikhao</button></div></div>
+      <div class="sright">
+        <button class="ib" id="sStart" style="flex:0 0 auto">Naya project</button>
+        <button class="ib" id="sTut" style="flex:0 0 auto">Tutorial</button></div></div>
     <div class="srow"><div class="sleft"><b>Toolbar</b>
       <span>Simple me sirf roz kaam aane wale tools rehte hain. All tools sab kuch khol deta hai.</span></div>
       <div class="sright"><button class="ib" id="sSimple" style="flex:0 0 auto">${simpleUI?'Simple':'All tools'}</button></div></div>
@@ -8037,6 +8231,7 @@ function renderSettings(){
   on('sGrid', () => { toggleGrid(); renderSettings(); });
   on('sSnap', () => { snapOn = !snapOn; save(); renderSettings(); toast(snapOn?'Snapping on':'Snapping off'); });
   on('sStart', () => { openSettings(false); openStart(true); });
+  on('sTut', () => { openSettings(false); startTutorial(true); });
   on('sSimple', () => { setSimple(!simpleUI); renderSettings(); });
   const su = $('sSurf'); if(su) su.addEventListener('change', () => { setSurface(su.value); renderSettings(); });
   on('sShape', () => { shapeSnap = !shapeSnap; save(); renderSettings();

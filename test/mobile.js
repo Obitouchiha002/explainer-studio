@@ -57,7 +57,10 @@ T('mode buttons pe icon hai jab label chhupta hai', () => {
 
 T('modal poori chaudai lete hain', () => {
   if(!/\.helpbox\{[^}]*width:100%/.test(mob.replace(/\s+/g,''))) throw new Error('help modal full width nahi');
-  if(!/\.startp\{[^}]*bottom:0/.test(mob.replace(/\s+/g,''))) throw new Error('start panel sheet nahi banta');
+  const st = (css.match(/\n  \.startp\{([^}]*)\}/) || [,''])[1].replace(/\s+/g,'');
+  if(!/inset:0/.test(st)) throw new Error('project screen poori screen nahi leti');
+  if(!/safe-area-inset-bottom/.test(mob.replace(/\s+/g,'').match(/\.startp\{([^}]*)\}/)?.[1] || ''))
+    throw new Error('project screen phone ke notch/bar ke neeche chhup jayegi');
 });
 
 /* ---- portrait vs landscape ---- */
@@ -98,6 +101,18 @@ T('phone pe ⋯ menu bottom sheet banta hai', () => {
     throw new Error('menu ke items chhote hain — touch me mushkil');
   if(!/menusheet/.test(html.split('<style>')[0] + html.split('</style>')[1]))
     throw new Error('menusheet lagane wala JS nahi');
+});
+
+T('project screen aur tutorial phone pe fit hote hain', () => {
+  const st = (full.match(/\.stbox\{([^}]*)\}/) || [,''])[1];
+  if(!/min\(/.test(st)) throw new Error('project box ki width fix hai — chhoti screen pe kat jayegi');
+  if(!/overflow-y:\s*auto/.test((full.match(/\.startp\{([^}]*)\}/) || [,''])[1]))
+    throw new Error('project screen scroll nahi hoti — chhote phone pe Start button neeche chhup jayega');
+  const opts = (full.match(/\.stopts\{([^}]*)\}/) || [,''])[1];
+  if(!/auto-fit/.test(opts)) throw new Error('naap ke option ek line me nahi tootenge');
+  const card = (full.match(/\.tutcard\{([^}]*)\}/) || [,''])[1];
+  if(!/min\(/.test(card) || !/100vw/.test(card))
+    throw new Error('tutorial card ki width phone ke hisaab se nahi');
 });
 
 console.log('\nMOBILE LAYOUT');

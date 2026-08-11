@@ -41,6 +41,7 @@ const BRIDGE = `
   get showGrid(){return showGrid}, set showGrid(v){showGrid=v},
   get livePath(){return livePath}, get mode(){return mode},
   get bootDone(){return bootDone},
+  get TUT(){return TUT}, get tutAt(){return tutAt}, get stPick(){return stPick},
   get SURFACES(){return SURFACES}, get surface(){return surface},
   get T(){return T},
   get tool(){return tool}, get uiMode(){return uiMode},
@@ -299,7 +300,17 @@ function ready(){
   });
 }
 
-module.exports = { S, T, T2, pump, ready, elById, listeners, store, NET, REC, topBar,
+/* Stub ke elements pe .click() kuch nahi karta — asli listener dhoondh kar
+   chalate hain, taaki test wahi raasta le jo user leta hai. */
+function fire(el, type, extra){
+  const ls = listeners.filter(l => l.el === el && l.type === type);
+  if(!ls.length) throw new Error('koi ' + type + ' listener nahi mila: ' + ((el && el.id) || el));
+  const ev = Object.assign({ target:el, currentTarget:el, preventDefault(){}, stopPropagation(){} }, extra);
+  ls.forEach(l => l.fn(ev));
+  pump(2);
+}
+
+module.exports = { S, T, T2, pump, ready, fire, elById, listeners, store, NET, REC, topBar,
                    mkEl, css, html, sandbox, document,
                    get CONFIRM_SAYS(){ return CONFIRM_SAYS; },
                    setConfirm(v){ CONFIRM_SAYS = v; },

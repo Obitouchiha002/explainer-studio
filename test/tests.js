@@ -1,7 +1,7 @@
 /* Test suite. `node test/tests.js` ya `IDB=1 node test/tests.js`.
    Har test ek asli problem ke khilaf hai — zyadatar wo jo sach me tut chuke the. */
 const H = require('./harness');
-const { S, T, T2, pump, ready, elById, listeners, store, NET, REC, topBar, mkEl, css, report } = H;
+const { S, T, T2, pump, ready, fire, elById, listeners, store, NET, REC, topBar, mkEl, css, report } = H;
 
 function syncTests(){
 /* ------------------------------ core ------------------------------ */
@@ -431,18 +431,88 @@ T('mode ke naam batate hain ki wahan hota kya hai', () => {
     throw new Error('"Present" me record hai par naam se pata nahi chalta: ' + by('present'));
 });
 
-T('pehli baar shuruaat wala panel aata hai, dobara nahi', () => {
+T('pehli baar project screen aata hai, dobara nahi', () => {
   delete store['tbv_studio_seen'];
   S.openStart(true);
-  if(!elById.startp.classList.contains('on')) throw new Error('panel khula hi nahi');
-  const opts = [...elById.startp.innerHTML.matchAll(/data-start="(\w+)"/g)].map(m => m[1]);
-  // markup se check — stub innerHTML padhta nahi
-  const fromHtml = [...H.html.matchAll(/data-start="(\w+)"/g)].map(m => m[1]);
-  for(const k of ['script','blank','demo'])
-    if(!fromHtml.includes(k)) throw new Error(k + ' wala option nahi hai');
+  if(!elById.startp.classList.contains('on')) throw new Error('screen khula hi nahi');
+  // naam ka khaana + teenon chunne wale group markup me hone chahiye
+  for(const k of ['id="stName"', 'id="stSize"', 'id="stSurf"', 'id="stFrom"', 'id="stGo"'])
+    if(!H.html.includes(k)) throw new Error(k + ' nahi hai');
+  for(const k of ['data-size="16:9"', 'data-size="9:16"', 'data-size="free"'])
+    if(!H.html.includes(k)) throw new Error(k + ' nahi hai');
+  for(const k of ['data-from="script"', 'data-from="blank"', 'data-from="demo"'])
+    if(!H.html.includes(k)) throw new Error(k + ' nahi hai');
   S.doneStart();
   if(elById.startp.classList.contains('on')) throw new Error('band nahi hua');
   if(store['tbv_studio_seen'] !== '1') throw new Error('yaad nahi rakha — har baar aayega');
+});
+
+T('project screen: naap chunne se safe frame set hota hai', () => {
+  delete store['tbv_studio_seen'];
+  S.openStart(true);
+  elById.stName.value = 'Vibe Coding Part 1';
+  S.pickStart('size', '9:16');
+  S.pickStart('surf', 'green');
+  fire(elById.stGo, 'click');
+  if(elById.startp.classList.contains('on')) throw new Error('Start pe band nahi hua');
+  if(S.frameMode !== 2) throw new Error('9:16 chuna par frame Shorts nahi hua');
+  if(S.surface !== 'green') throw new Error('board nahi badla');
+  if(S.doc.name !== 'Vibe Coding Part 1') throw new Error('naam nahi laga: ' + S.doc.name);
+});
+
+T('project screen: naam khaali chhodo to bhi kaam chalta hai', () => {
+  delete store['tbv_studio_seen'];
+  S.openStart(true);
+  elById.stName.value = '   ';
+  S.pickStart('size', '16:9');
+  fire(elById.stGo, 'click');
+  if(!S.doc.name.trim()) throw new Error('naam khaali reh gaya');
+  if(S.frameMode !== 1) throw new Error('16:9 pe safe frame nahi laga');
+});
+
+/* Tutorial. Sabse badi galti ye ho sakti hai ki step us button ki baat kare jo
+   uske mode me dikhta hi nahi — tab spotlight khaali jagah pe padega. */
+T('tutorial: har step ka target usi ke mode me dikhta hai', () => {
+  for(const st of S.TUT){
+    if(!elById[st.el]) throw new Error(st.el + ' naam ka kuch hai hi nahi');
+    if(!st.t || !st.p) throw new Error(st.el + ': title ya matlab likha hi nahi');
+    if(!st.mode) continue;
+    // stub ka getAttribute hamesha null deta hai, isliye asli markup padhte hain —
+    // warna ye check sirf pass hone ka dikhawa karta hai
+    const tag = H.html.match(new RegExp('<[^>]*id="' + st.el + '"[^>]*>'));
+    if(!tag) throw new Error(st.el + ' markup me nahi mila');
+    const mo = tag[0].match(/data-mo="([^"]+)"/);
+    if(mo && !mo[1].split(/\s+/).includes(st.mode))
+      throw new Error(st.el + ' mode "' + st.mode + '" me chhupa hai (dikhta hai: ' + mo[1] + ')');
+  }
+});
+
+T('tutorial: Next aage le jaata hai, Back peeche, aakhir me band', () => {
+  delete store['tbv_studio_tut'];
+  S.startTutorial();
+  if(!elById.tut.classList.contains('on')) throw new Error('khula hi nahi');
+  if(elById.tutN.textContent !== '1 / ' + S.TUT.length) throw new Error('ginti galat: ' + elById.tutN.textContent);
+  fire(elById.tutNext, 'click');
+  if(elById.tutN.textContent !== '2 / ' + S.TUT.length) throw new Error('Next se aage nahi gaya');
+  fire(elById.tutBack, 'click');
+  if(elById.tutN.textContent !== '1 / ' + S.TUT.length) throw new Error('Back se peeche nahi aaya');
+  fire(elById.tutBack, 'click');
+  if(elById.tutN.textContent !== '1 / ' + S.TUT.length) throw new Error('pehle step se bhi peeche chala gaya');
+  for(let i = 0; i < S.TUT.length; i++) fire(elById.tutNext, 'click');
+  if(elById.tut.classList.contains('on')) throw new Error('aakhir me band nahi hua');
+  if(store['tbv_studio_tut'] !== '1') throw new Error('yaad nahi rakha — har baar aayega');
+});
+
+T('tutorial: Skip turant band karta hai aur dobara nahi aata', () => {
+  delete store['tbv_studio_tut'];
+  S.startTutorial();
+  fire(elById.tutSkip, 'click');
+  if(elById.tut.classList.contains('on')) throw new Error('Skip pe band nahi hua');
+  S.startTutorial();
+  if(elById.tut.classList.contains('on')) throw new Error('dobara aa gaya');
+  S.startTutorial(true);                                    // Settings se maanga to aaye
+  if(!elById.tut.classList.contains('on')) throw new Error('Settings se dobara nahi khula');
+  fire(elById.tutSkip, 'click');
 });
 
 T('demo board ka naam saaf batata hai ki demo hai', () => {
