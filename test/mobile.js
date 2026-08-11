@@ -60,6 +60,46 @@ T('modal poori chaudai lete hain', () => {
   if(!/\.startp\{[^}]*bottom:0/.test(mob.replace(/\s+/g,''))) throw new Error('start panel sheet nahi banta');
 });
 
+/* ---- portrait vs landscape ---- */
+const full = css.replace(/\s+/g, ' ');
+
+T('portrait aur landscape ke alag layout hain', () => {
+  if(!/body\.mob\.portrait \.dock/.test(full)) throw new Error('portrait ka dock layout nahi');
+  if(!/body\.mob\.landscape \.dock/.test(full)) throw new Error('landscape ka dock layout nahi');
+  if(!/isLandscape\(\)/.test(html)) throw new Error('orientation detect karne wala code nahi');
+  if(!/orientationchange/.test(html)) throw new Error('phone ghumane par kuch hota hi nahi');
+});
+
+T('landscape me tools side me jaate hain (neeche nahi)', () => {
+  const m = full.match(/body\.mob\.landscape \.dock\{([^}]*)\}/);
+  if(!m) throw new Error('landscape dock rule nahi');
+  if(!/flex-direction:\s*column/.test(m[1]))
+    throw new Error('landscape me dock abhi bhi horizontal — unchai waise hi kam hai');
+  if(!/left:/.test(m[1])) throw new Error('rail baayin taraf nahi lagi');
+});
+
+T('landscape me panel daayin se, portrait me neeche se', () => {
+  if(!/body\.mob\.landscape \.insp[^{]*\{[^}]*right:0/.test(full))
+    throw new Error('landscape me panel daayin taraf se nahi aata');
+  if(!/body\.mob\.landscape \.insp[^{]*\{[^}]*top:42px/.test(full))
+    throw new Error('landscape panel poori unchai nahi le raha');
+});
+
+T('portrait me tools 50px+ (angoothe ke liye)', () => {
+  const m = full.match(/body\.mob\.portrait \.tool\{([^}]*)\}/);
+  if(!m) throw new Error('portrait tool size set nahi');
+  const px = +(m[1].match(/width:(\d+)px/) || [,0])[1];
+  if(px < 50) throw new Error('portrait me tool ' + px + 'px — angoothe ke liye 50px chahiye');
+});
+
+T('phone pe ⋯ menu bottom sheet banta hai', () => {
+  if(!/\.pop\.menusheet/.test(full)) throw new Error('menu sheet ka style nahi');
+  if(!/menusheet \.tbtn\{[^}]*min-height:52px/.test(full))
+    throw new Error('menu ke items chhote hain — touch me mushkil');
+  if(!/menusheet/.test(html.split('<style>')[0] + html.split('</style>')[1]))
+    throw new Error('menusheet lagane wala JS nahi');
+});
+
 console.log('\nMOBILE LAYOUT');
 console.log(checks.map(c => c[0]==='ok' ? '  ✓ '+c[1] : '  ✗ '+c[1]+' → '+c[2]).join('\n'));
 const bad = checks.filter(c => c[0]==='bad').length;

@@ -87,6 +87,17 @@
   .top.tight .tbtn[data-ico]::before{content:attr(data-ico);font-size:15px;}
   .top .tbtn.solid{font-size:14px !important;}
   #ovfPop{width:230px;max-height:70vh;overflow-y:auto;}
+  /* phone pe ⋯ menu poori chaudai ki sheet — angoothe ke paas */
+  .pop.menusheet{left:0 !important;right:0 !important;top:auto !important;bottom:0 !important;
+    width:100% !important;max-width:100% !important;max-height:74vh;
+    border-radius:22px 22px 0 0;padding:20px 14px calc(16px + env(safe-area-inset-bottom));
+    display:none;}
+  .pop.menusheet.on{display:block;}
+  .pop.menusheet::before{content:'';position:absolute;top:8px;left:50%;transform:translateX(-50%);
+    width:44px;height:4px;border-radius:4px;background:var(--line);}
+  .pop.menusheet .tbtn{display:flex;width:100%;justify-content:flex-start;gap:12px;
+    padding:14px 14px;border-radius:14px;font-size:15px;margin-bottom:4px;min-height:52px;}
+  .pop.menusheet .tbtn::before{font-size:19px;}
   #ovfPop .tbtn{display:flex;width:100%;justify-content:flex-start;gap:9px;
                 padding:9px 11px;border-radius:10px;font-size:13.5px;margin-bottom:3px;}
   #ovfPop .tbtn:hover{background:var(--panel2);}
@@ -713,6 +724,65 @@
     .pctl .kh{display:none;}
     .helpbox{padding:18px;}
   }
+
+  /* ============ MOBILE: PORTRAIT vs LANDSCAPE ============
+     Dono me jagah alag kism ki kam hoti hai, isliye chrome alag jagah jaata hai:
+       PORTRAIT   chaudai kam  -> tools neeche patti me, panel neeche se sheet
+       LANDSCAPE  unchai kam   -> tools baayin taraf khadi rail me (Procreate
+                                  jaisa), panel daayin taraf se, top bar patli
+     Ek hi layout dono me thoosne se hamesha kuch na kuch kat jaata hai. */
+  body.mob .top{height:50px;padding:0 8px;gap:5px;}
+  body.mob .top .divider,body.mob .brand,body.mob .savest{display:none;}
+  body.mob .bname{min-width:0;max-width:110px;font-size:14px;padding:5px 7px;}
+  body.mob .modes{gap:2px;padding:2px;}
+  body.mob .mbtn{font-size:0;padding:7px 9px;}
+  body.mob .mbtn::before{content:attr(data-ico);font-size:16px;}
+  /* mobile pe har chhota button poore 44px ka */
+  body.mob .tbtn{min-height:38px;padding:8px 10px;}
+
+  /* ---- PORTRAIT ---- */
+  body.mob.portrait .dock{
+    left:0;right:0;bottom:0;transform:none;max-width:100%;
+    border-radius:20px 20px 0 0;border-bottom:0;
+    padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+    gap:6px;justify-content:flex-start;overflow-x:auto;}
+  body.mob.portrait .tool{width:52px;height:52px;flex:0 0 52px;font-size:23px;border-radius:16px;}
+  body.mob.portrait .brush{
+    left:0;right:0;transform:none;max-width:100%;border-radius:16px 16px 0 0;
+    bottom:calc(74px + env(safe-area-inset-bottom));
+    justify-content:center;padding:10px 12px;}
+  body.mob.portrait .zoom{right:10px;bottom:calc(86px + env(safe-area-inset-bottom));}
+  body.mob.portrait .ctxbar{top:auto;bottom:calc(86px + env(safe-area-inset-bottom));}
+  body.mob.portrait .pctl{bottom:calc(16px + env(safe-area-inset-bottom));}
+
+  /* ---- LANDSCAPE ---- */
+  body.mob.landscape .top{height:42px;}
+  body.mob.landscape .dock{
+    left:calc(6px + env(safe-area-inset-left));top:50%;bottom:auto;right:auto;
+    transform:translateY(-50%);flex-direction:column;max-width:none;
+    max-height:calc(100vh - 62px);overflow-y:auto;overflow-x:visible;
+    padding:8px;gap:5px;border-radius:18px;}
+  body.mob.landscape .tool{width:44px;height:44px;flex:0 0 44px;font-size:20px;}
+  body.mob.landscape .dock .divider{width:24px;height:1px;margin:3px auto;}
+  body.mob.landscape .brush{
+    left:auto;right:calc(8px + env(safe-area-inset-right));bottom:auto;top:50%;
+    transform:translateY(-50%);flex-direction:column;padding:10px 8px;border-radius:16px;}
+  body.mob.landscape .swatches{flex-direction:column;}
+  body.mob.landscape input[type=range]{width:80px;}
+  body.mob.landscape .zoom{right:calc(8px + env(safe-area-inset-right));bottom:10px;}
+  body.mob.landscape .ctxbar{top:48px;bottom:auto;max-width:calc(100vw - 120px);}
+  /* landscape me neeche jagah nahi — panel daayin taraf se aate hain */
+  body.mob.landscape .insp,body.mob.landscape .galp,body.mob.landscape .layp,
+  body.mob.landscape .flowp,body.mob.landscape .animp{
+    left:auto !important;right:0 !important;top:42px !important;bottom:0 !important;
+    width:min(360px,54vw) !important;max-height:none !important;
+    border-radius:20px 0 0 0 !important;padding-top:14px !important;
+    border-right:0 !important;border-bottom:0 !important;}
+  body.mob.landscape .insp::before,body.mob.landscape .galp::before,
+  body.mob.landscape .layp::before,body.mob.landscape .flowp::before,
+  body.mob.landscape .animp::before{display:none;}
+  body.mob.landscape .helpbox,body.mob.landscape .startp{max-height:88vh;}
+  body.mob.landscape.sheet-open .dock{display:flex !important;}   /* rail bachi rehti hai */
 
   /* ==================== MOBILE ====================
      Phone pe side me tairte panel angootha se pahunchte hi nahi. Isliye wahan
@@ -7545,7 +7615,22 @@ $('scratchBtn').addEventListener('click', toggleScratch);
    aate hain. Isliye tool chunne pe uska naam ek toast me bata dete hain (warna
    naye user ko pata hi nahi chalega ki kaunsa tool hai), aur koi bhi sheet
    khulte hi dock chhupa dete hain taaki dono aapas me na ladein. */
-function isMobile(){ return window.innerWidth <= 760; }
+function isMobile(){ return Math.min(window.innerWidth, window.innerHeight) <= 760
+                            && window.innerWidth <= 1024; }
+function isLandscape(){ return window.innerWidth > window.innerHeight; }
+
+/* Phone ghumane par layout poora badalta hai, sirf sikudta nahi. Ye classes
+   CSS ko batati hain ki kaunsa layout lagana hai. */
+function applyOrientation(){
+  const m = isMobile();
+  document.body.classList.toggle('mob', m);
+  document.body.classList.toggle('portrait', m && !isLandscape());
+  document.body.classList.toggle('landscape', m && isLandscape());
+  resize();
+  fitTopBar();
+  syncSheets();
+}
+window.addEventListener('orientationchange', () => setTimeout(applyOrientation, 120));
 
 const SHEETS = ['insp','galp','layp','flowp','animp'];
 function syncSheets(){
@@ -7672,6 +7757,24 @@ function fitTopBar(){
   bar.classList.remove('tight');
 
   const fits = () => bar.scrollWidth <= bar.clientWidth + 1;
+
+  // Phone pe naapne ka koi matlab nahi — chaudai hamesha kam hai. Seedha sab
+  // kam-zaroori buttons ⋯ me daal do, top bar sirf naam + mode + Present.
+  if(isMobile()){
+    bar.classList.add('tight');
+    btn.style.display = '';
+    const movable = [...bar.querySelectorAll('.tbtn[data-pri]')]
+      .filter(el => !el.classList.contains('mo-off'))
+      .sort((a, b) => (+b.dataset.pri) - (+a.dataset.pri));
+    const keep = isLandscape() ? 2 : 0;        // landscape me thodi jagah hai
+    for(const el of movable.slice(0, Math.max(0, movable.length - keep))){
+      ovfHome.set(el, el.nextSibling);
+      pop.appendChild(el);
+    }
+    if(!pop.children.length) btn.style.display = 'none';
+    return;
+  }
+
   if(fits()) return;
 
   bar.classList.add('tight');                  // step 1: sirf icons
@@ -7700,12 +7803,18 @@ $('ovfBtn').addEventListener('click', e => {
   const on = p.classList.contains('on');
   closePops();
   if(on) return;
-  const r = e.currentTarget.getBoundingClientRect();
-  p.style.left = clamp(r.right - 230, 12, window.innerWidth - 242) + 'px';
-  p.style.top = '62px';
+  if(isMobile()){                              // phone pe menu = neeche se sheet
+    p.classList.add('menusheet');
+    p.style.left = ''; p.style.top = ''; p.style.width = '';
+  } else {
+    p.classList.remove('menusheet');
+    const r = e.currentTarget.getBoundingClientRect();
+    p.style.left = clamp(r.right - 230, 12, window.innerWidth - 242) + 'px';
+    p.style.top = '62px';
+  }
   p.classList.add('on');
 });
-window.addEventListener('resize', () => { fitTopBar(); syncSheets(); });
+window.addEventListener('resize', () => { applyOrientation(); });
 
 /* ==================== RIGHT-CLICK MENU ====================
    Desktop pe mouse se kaam karna aasan ho — sab kuch panel dhoondhne ki jagah
@@ -8717,6 +8826,7 @@ let bootDone = false;                        // tests aur boot-time races ke liy
     const sp = localStorage.getItem('tbv_studio_simple'); if(sp !== null) simpleUI = sp === '1';
   }catch(err){}
   applyMode();
+  applyOrientation();
   mobileDefaults();
   syncSheets();
   setSaveState('ok');
